@@ -1,0 +1,84 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "1"
+group= "uk.co.haxyshideout.ChocoCraft2" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "ChocoCraft2"
+
+idea { module { inheritOutputDirs = true } }
+
+minecraft {
+    version = "1.8-11.14.1.1371"
+    mappings = "snapshot_20150412"
+}
+
+//sourceSets.main { java.srcDirs = ['main/src']; resources.srcDirs = ['main/resources']; output.resourcesDir = output.classesDir }
+
+processResources
+{
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version, 'fversion':"Forge 10.13.2.1230;Forge 10.13.0.1208;Forge 10.13.0.1180"
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        include 'Pixelmon.info'
+    }
+    
+    from(sourceSets.main.allSource) {
+        include '**/*.data'
+        include '**/*.schematic'
+    }
+    
+}
+
+// this sets our output jar to have a 'tag' of 'universal' on it
+// It also adds the minecraft version in a custom version name
+// The result is files named <projectname>-<mcversion>-<version>-universal.jar
+jar {
+    classifier = 'universal'
+    version = "${project.minecraft.version}-${project.version}"
+    manifest {
+        attributes 'FMLAT': 'pixelmon_at.cfg'
+    }
+}
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'src'
+    version = "${project.minecraft.version}-${project.version}"
+}
+
+// Add in an mcp named jar, for those who wish to run in a development environment (assuming mcp naming matches)
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+    version = "${project.minecraft.version}-${project.version}"
+}
+
+
+artifacts{
+  archives sourceJar, deobfJar
+}

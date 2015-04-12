@@ -1,0 +1,20 @@
+[
+{
+  "modid": "chococraft2",
+  "name": "Clienthax's ChocoCraft2",
+  "description": "Adds a mountable, breedable mob and supporting items.",
+  "version": "1",
+  "credits": "",
+  "logoFile": "chococraft_icon.png",
+  "mcversion": "1.8",
+  "url": "http://www.minecraftforum.net/topic/1119809-",
+  "updateUrl": "",
+  "authors": ["Clienthax"],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ],
+  "useDependencyInformation": "true"
+}
+]
