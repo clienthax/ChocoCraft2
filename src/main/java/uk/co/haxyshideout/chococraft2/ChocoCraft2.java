@@ -5,6 +5,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import uk.co.haxyshideout.chococraft2.commands.DebugCommand;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.config.RecipieHandler;
@@ -30,6 +33,11 @@ public class ChocoCraft2 {
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
+	}
+
+	@Mod.EventHandler
+	public void onServerStart(FMLServerStartingEvent event) {
+		event.registerServerCommand(new DebugCommand());
 	}
 
 }

@@ -5,9 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.common.util.EnumHelper;
 import uk.co.haxyshideout.chococraft2.blocks.GysahlStemBlock;
 import uk.co.haxyshideout.chococraft2.blocks.StrawBlock;
+import uk.co.haxyshideout.haxylib.items.GenericArmor;
 import uk.co.haxyshideout.haxylib.items.GenericItem;
 import uk.co.haxyshideout.haxylib.items.GenericItemFood;
 import uk.co.haxyshideout.haxylib.items.GenericItemSeeds;
@@ -43,6 +46,13 @@ public class Additions {
 	public static Item chocoboPackBagItem;
 	public static Item chocoboWhistleItem;
 
+	public static Item chocoDisguiseHelm;
+	public static Item chocoDisguiseChest;
+	public static Item chocoDisguiseLegs;
+	public static Item chocoDisguiseBoots;
+
+	public static final ArmorMaterial chocoDisguiseMaterial = EnumHelper.addArmorMaterial("chocoDisguise", Constants.MODID + ":chocoDisguise", 200, new int[]{3, 7, 6, 3}, 10);
+
 	//Register items and blocks etc in here
 	public static void registerAdditions() {
 		gysahlStemBlock = new GysahlStemBlock().setUnlocalizedName("gysahlStemBlock");
@@ -69,8 +79,12 @@ public class Additions {
 		chocoboPackBagItem = new GenericItem().setUnlocalizedName("chocoboPackBagItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboWhistleItem = new GenericItem().setUnlocalizedName("chocoboWhistleItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 
-		Minecraft.getMinecraft().currentScreen.getClass()
-		Minecraft.getMinecraft().gameSettings.guiScale = 2;
+		chocoDisguiseHelm = new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Helm).setUnlocalizedName("chocoDisguiseHelm").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoDisguiseChest = new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Plate).setUnlocalizedName("chocoDisguiseChest").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoDisguiseLegs = new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Legs).setUnlocalizedName("chocoDisguiseLegs").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoDisguiseBoots = new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Boots).setUnlocalizedName("chocoDisguiseBoots").setCreativeTab(ChocoCreativeTabs.chococraft2);
+
+
 		RegistryHelper.registerFieldsWithGameRegistry(Constants.MODID, Additions.class);
 	}
 
