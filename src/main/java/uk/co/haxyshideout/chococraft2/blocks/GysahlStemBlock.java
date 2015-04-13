@@ -1,16 +1,21 @@
 package uk.co.haxyshideout.chococraft2.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.haxylib.blocks.GenericBush;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -22,6 +27,7 @@ public class GysahlStemBlock extends GenericBush implements IGrowable {
 	public static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, MAXSTAGE);
 
 	public GysahlStemBlock() {
+		setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(STAGE, 0));
 		float f = 0.4F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f * 2.0F, 0.5F + f);
@@ -30,12 +36,52 @@ public class GysahlStemBlock extends GenericBush implements IGrowable {
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos) {
+		return new ItemStack(Additions.gysahlSeedsItem);
+	}
+
+	@Override
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		if(worldIn.isRemote)
 			return;
 
 		super.updateTick(worldIn, pos, state, rand);
 		this.growStem(worldIn, rand, pos, state);
+	}
+
+	@Override
+	public java.util.List<net.minecraft.item.ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	{
+		//if stage = max stage, drop gysahl green item, else drop nothing
+		List<ItemStack> ret = new ArrayList<ItemStack>();
+		if(state.getValue(STAGE) == MAXSTAGE) {
+			Random rand = world instanceof World ? ((World)world).rand : new Random();
+			ret.add(getGysahlItem(rand));
+
+			//If fully grown give a seed drop chance
+			int seedAmount = 3 + fortune;
+			for(int i = 0; i < seedAmount; i++) {
+				if(rand.nextInt(15) < 7) {
+					ret.add(new ItemStack(Additions.gysahlSeedsItem));
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	private ItemStack getGysahlItem(Random random) {
+		Item item;
+		int chance = random.nextInt(200);
+		if(chance < 10)
+			item = Additions.gysahlGoldenItem;
+		else if(chance < 30)
+			item = Additions.gysahlLoverlyItem;
+		else
+			item = Additions.gysahlGreenItem;
+
+
+		return new ItemStack(item);
 	}
 
 	@Override
@@ -57,60 +103,74 @@ public class GysahlStemBlock extends GenericBush implements IGrowable {
 	private void growStem(World worldIn, Random rand, BlockPos pos, IBlockState state) {
 		if(worldIn.getLightFromNeighbors(pos) >= 9) {
 			if( (Integer) state.getValue(STAGE) < MAXSTAGE) {
-				float growthRate = getGrowthRate(worldIn, pos.getX(), pos.getX(), pos.getZ());
-				if(rand.nextInt((int)(25F / growthRate) + 1) == 0) {
+				float growthChance = getGrowthChance(this, worldIn, pos);
+				if(rand.nextInt((int)(25F / growthChance) + 1) == 0) {
 					worldIn.setBlockState(pos, state.cycleProperty(STAGE), 2);
 				}
 			}
 		}
 	}
 
-	private float getGrowthRate(World theWorld, int xPos, int yPos, int zPos)
+	public void setGrowthStage(World world, BlockPos pos, IBlockState state) {
+		world.setBlockState(pos, state.withProperty(STAGE, 4), 2);
+	}
+
+	//Stolen from BlockCrops
+	public float getGrowthChance(Block blockIn, World worldIn, BlockPos pos)
 	{
-		float growRate = 1.0F;
-		Block blockNorth = theWorld.getBlockState(new BlockPos(xPos, yPos, zPos - 1)).getBlock();
-		Block blockSouth = theWorld.getBlockState(new BlockPos(xPos, yPos, zPos + 1)).getBlock();
-		Block k = theWorld.getBlockState(new BlockPos(xPos - 1, yPos, zPos)).getBlock();
-		Block l = theWorld.getBlockState(new BlockPos(xPos + 1, yPos, zPos)).getBlock();
-		Block i1 = theWorld.getBlockState(new BlockPos(xPos - 1, yPos, zPos - 1)).getBlock();
-		Block j1 = theWorld.getBlockState(new BlockPos(xPos + 1, yPos, zPos - 1)).getBlock();
-		Block k1 = theWorld.getBlockState(new BlockPos(xPos + 1, yPos, zPos + 1)).getBlock();
-		Block l1 = theWorld.getBlockState(new BlockPos(xPos - 1, yPos, zPos + 1)).getBlock();
+		float f = 1.0F;
+		BlockPos blockUnder = pos.down();
 
-		boolean samePlantLeftOrRight = k.equals(this) || l.equals(this);
-		boolean samePlantFrontOrBack = blockNorth.equals(this) || blockSouth.equals(this);
-		boolean samePlantAnyCorner = i1.equals(this) || j1.equals(this) || k1.equals(this) || l1.equals(this);
-
-		for (int xTmp = xPos - 1; xTmp <= xPos + 1; xTmp++)
+		for (int i = -1; i <= 1; ++i)
 		{
-			for (int zTmp = zPos - 1; zTmp <= zPos + 1; zTmp++)
+			for (int j = -1; j <= 1; ++j)
 			{
-				IBlockState baseBlockState = theWorld.getBlockState(new BlockPos(xTmp, yPos - 1, zTmp));
-				float tmpGrowRate = 0.0F;
-				if (baseBlockState.getBlock() == Blocks.farmland)
-				{
-					tmpGrowRate = 1.0F;
-					if((Integer) baseBlockState.getValue(BlockFarmland.MOISTURE) > 0) {
-						tmpGrowRate = 3F;
-					}
-                }
+				float f1 = 0.0F;
+				IBlockState iblockstate = worldIn.getBlockState(blockUnder.add(i, 0, j));
 
-				if (xTmp != xPos || zTmp != zPos)
+				if (iblockstate.getBlock().canSustainPlant(worldIn, blockUnder.add(i, 0, j), net.minecraft.util.EnumFacing.UP, (net.minecraftforge.common.IPlantable) blockIn))
 				{
-					tmpGrowRate /= 4F;
+					f1 = 1.0F;
+
+					if (iblockstate.getBlock().isFertile(worldIn, blockUnder.add(i, 0, j)))
+					{
+						f1 = 3.0F;
+					}
 				}
 
-				growRate += tmpGrowRate;
+				if (i != 0 || j != 0)
+				{
+					f1 /= 4.0F;
+				}
+
+				f += f1;
 			}
 		}
 
-		if (samePlantAnyCorner || samePlantLeftOrRight && samePlantFrontOrBack)
+		BlockPos blockNorth = pos.north();
+		BlockPos blockSouth = pos.south();
+		BlockPos blockWest = pos.west();
+		BlockPos blockEast = pos.east();
+		boolean flag = blockIn == worldIn.getBlockState(blockWest).getBlock() || blockIn == worldIn.getBlockState(blockEast).getBlock();
+		boolean flag1 = blockIn == worldIn.getBlockState(blockNorth).getBlock() || blockIn == worldIn.getBlockState(blockSouth).getBlock();
+
+		if (flag && flag1)
 		{
-			growRate /= 2.0F;
+			f /= 2.0F;
+		}
+		else
+		{
+			boolean flag2 = blockIn == worldIn.getBlockState(blockWest.north()).getBlock() || blockIn == worldIn.getBlockState(blockEast.north()).getBlock() || blockIn == worldIn.getBlockState(blockEast.south()).getBlock() || blockIn == worldIn.getBlockState(blockWest.south()).getBlock();
+
+			if (flag2)
+			{
+				f /= 2.0F;
+			}
 		}
 
-		return growRate;
+		return f;
 	}
+
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block

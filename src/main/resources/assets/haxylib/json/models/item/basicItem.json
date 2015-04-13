@@ -1,0 +1,6 @@
+{
+  "parent": "%modid%:item/baseItem",
+  "textures": {
+    "layer0": "%modid%:%texfolder%/%name%"
+  }
+}

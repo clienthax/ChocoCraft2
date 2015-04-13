@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "chococraft2:blocks/gysahl_green"
+  }
+}

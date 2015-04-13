@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,8 +19,9 @@ import java.lang.reflect.Field;
  */
 public class RegistryHelper {
 
-	public static void registerFieldsWithGameRegistry(Class clazz) {
+	public static void registerFieldsWithGameRegistry(String modid, Class clazz) {
 		try {
+			JsonGenerator.setModID(modid);
 			for (Field field : clazz.getFields()) {
 				if (field.get(null) instanceof Block) {
 					Block block = (Block) field.get(null);
@@ -53,7 +55,7 @@ public class RegistryHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		}
+	}
 
 
 }

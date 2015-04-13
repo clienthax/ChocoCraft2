@@ -12,6 +12,6 @@ public class ChocoCreativeTabs {
 	public static final CreativeTabs chococraft2 = new CreativeTabs("Chococraft2"){
 		@Override
 		@SideOnly(Side.CLIENT)
-		public Item getTabIconItem() {return Item.getItemFromBlock(Additions.gysahlStemBlock);}
+		public Item getTabIconItem() {return Additions.gysahlGreenItem;}
 	};
 }

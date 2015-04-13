@@ -1,0 +1,6 @@
+{
+  "parent": "chococraft2:item/baseItem",
+  "textures": {
+    "layer0": "chococraft2:items/gysahlChibiItem"
+  }
+}
