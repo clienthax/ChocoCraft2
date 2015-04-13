@@ -13,7 +13,7 @@ public class ClientProxy extends ServerProxy {
 
 	@Override
 	public void registerRenderers() {
-		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 		RegistryHelper.registerRenderers(Minecraft.getMinecraft().getRenderItem().getItemModelMesher(), Additions.class, Constants.MODID);
+
 	}
 }

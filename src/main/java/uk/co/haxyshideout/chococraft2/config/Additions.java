@@ -21,7 +21,7 @@ public class Additions {
 	public static void registerAdditions() {
 		gysahlStemBlock = new GysahlStemBlock().setUnlocalizedName("gysahlStemBlock").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		gysahlGreenBlock = new GysahlGreenBlock().setUnlocalizedName("gysahlGreenBlock").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		strawBlock = new GenericBlock(Material.glass).setOpaque(false).setStepSound(Block.soundTypeGrass).setCreativeTab(ChocoCreativeTabs.chococraft2);
+		strawBlock = new GenericBlock(Material.glass).setOpaque(false).setUnlocalizedName("strawBlock").setStepSound(Block.soundTypeGrass).setCreativeTab(ChocoCreativeTabs.chococraft2);
 
 		RegistryHelper.registerFieldsWithGameRegistry(Additions.class);
 	}

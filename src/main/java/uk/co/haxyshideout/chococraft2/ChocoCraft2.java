@@ -15,7 +15,7 @@ import uk.co.haxyshideout.chococraft2.proxys.ServerProxy;
 public class ChocoCraft2 {
 
 	@SidedProxy(clientSide = "uk.co.haxyshideout.chococraft2.proxys.ClientProxy", serverSide = "uk.co.haxyshideout.chococraft2.proxys.ServerProxy")
-	public ServerProxy proxy;
+	public static ServerProxy proxy;
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {

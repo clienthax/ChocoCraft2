@@ -1,0 +1,7 @@
+{
+  "parent": "block/carpet",
+  "textures": {
+    "particle": "chococraft2:blocks/chocoboStraw",
+    "wool": "chococraft2:blocks/chocoboStraw"
+  }
+}

@@ -1,7 +1,6 @@
 package uk.co.haxyshideout.chococraft2.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.properties.PropertyInteger;
@@ -10,13 +9,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import uk.co.haxyshideout.haxylib.blocks.GenericBush;
 
 import java.util.Random;
 
 /**
  * Created by clienthax on 12/4/2015.
  */
-public class GysahlStemBlock extends BlockBush implements IGrowable {
+public class GysahlStemBlock extends GenericBush implements IGrowable {
 
 	public static final Integer MAXSTAGE = 4;
 	public static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, MAXSTAGE);
