@@ -1,5 +1,5 @@
 {
-  "parent": "block/strawBlock",
+  "parent": "chococraft2:block/strawBlock",
   "display": {
     "thirdperson": {
       "rotation": [ 10, -45, 170 ],

@@ -3,8 +3,10 @@ package uk.co.haxyshideout.haxylib.utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,20 +20,17 @@ public class RegistryHelper {
 
 	public static void registerFieldsWithGameRegistry(Class clazz) {
 		try {
-			for(Field field : clazz.getFields()) {
-				if(field.get(null) instanceof Block) {
+			for (Field field : clazz.getFields()) {
+				if (field.get(null) instanceof Block) {
 					Block block = (Block) field.get(null);
-					if(block != null) {
-						GameRegistry.registerBlock(block, block.getUnlocalizedName());
-						JsonGenerator.generateSimpleBlockJson(block.getUnlocalizedName());
-					}
-				} else
-				if(field.get(null) instanceof Item) {
+					GameRegistry.registerBlock(block, block.getUnlocalizedName());
+					JsonGenerator.generateSimpleBlockJson(block.getUnlocalizedName());
+
+				} else if (field.get(null) instanceof Item) {
 					Item item = (Item) field.get(null);
-					if(item != null) {
-						GameRegistry.registerItem(item, item.getUnlocalizedName());
-						JsonGenerator.generateSimpleItemJson(item.getUnlocalizedName(), item instanceof ItemBlock, item);
-					}
+					GameRegistry.registerItem(item, item.getUnlocalizedName());
+					JsonGenerator.generateSimpleItemJson(item.getUnlocalizedName(), item instanceof ItemBlock, item);
+
 				}
 			}
 		} catch (Exception e) {
@@ -40,24 +39,21 @@ public class RegistryHelper {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerRenderers(ItemModelMesher itemModelMesher, Class clazz, String modId) {
+	public static void registerRenderers(Class clazz, String modId) {
 		try {
 			for (Field field : clazz.getFields()) {
 				if (field.get(null) instanceof Block) {
 					Block block = (Block) field.get(null);
-					if(block != null)
-						itemModelMesher.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(modId + ":" + block.getUnlocalizedName(), "inventory"));
-				} else
-				if (field.get(null) instanceof Item) {
+					ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(modId + ":" + block.getUnlocalizedName(), "inventory"));
+				} else if (field.get(null) instanceof Item) {
 					Item item = (Item) field.get(null);
-					if(item != null)
-						itemModelMesher.register(item, 0, new ModelResourceLocation(modId + ":" + item.getUnlocalizedName(), "inventory"));
+					ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modId + ":" + item.getUnlocalizedName(), "inventory"));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+		}
 
 
 }

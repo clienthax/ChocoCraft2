@@ -20,11 +20,11 @@ public class ChocoCraft2 {
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {
 		Additions.registerAdditions();
+		proxy.registerRenderers();
 	}
 
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event) {
-		proxy.registerRenderers();
 	}
 
 }
