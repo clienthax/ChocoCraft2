@@ -11,6 +11,10 @@ public class GenericItemFood extends ItemFood implements IJsonItem {
 		super(amount, saturation, isWolfFood);
 	}
 
+	public GenericItemFood(int amount, boolean isWolfFood) {
+		super(amount, isWolfFood);
+	}
+
 	@Override
 	public String getUnlocalizedName() {
 		return super.getUnlocalizedName().substring(5);

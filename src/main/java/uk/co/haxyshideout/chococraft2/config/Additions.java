@@ -1,9 +1,7 @@
 package uk.co.haxyshideout.chococraft2.config;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.potion.Potion;
@@ -65,18 +63,18 @@ public class Additions {
 		gysahlPinkItem = new GenericItem().setUnlocalizedName("gysahlPinkItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		gysahlRedItem = new GenericItem().setUnlocalizedName("gysahlRedItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		gysahlRawPicklesItem = new GenericItem().setUnlocalizedName("gysahlRawPicklesItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		gysahlCookedPicklesItem = new GenericItem().setUnlocalizedName("gysahlCookedPicklesItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		gysahlCakeItem = new GenericItem().setUnlocalizedName("gysahlCakeItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		gysahlCookedPicklesItem = new GenericItemFood(2, false).setUnlocalizedName("gysahlCookedPicklesItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		gysahlCakeItem = new GenericItem().setUnlocalizedName("gysahlCakeItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
 		gysahlChibiItem = new GenericItem().setUnlocalizedName("gysahlChibiItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 
 		chocoboFeatherItem = new GenericItem().setUnlocalizedName("chocoboFeatherItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocoboLegRawItem = new GenericItemFood(2, 0.3F, true).setPotionEffect(Potion.hunger.getId(), 30, 0, 0.3F).setUnlocalizedName("chocoboLegRawItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocoboLegCookedItem = new GenericItemFood(6, 0.6F, true).setUnlocalizedName("chocoboLegCookedItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocopediaItem = new GenericItem().setUnlocalizedName("chocopediaItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoboLegRawItem = new GenericItemFood(4, 0.3F, true).setPotionEffect(Potion.hunger.getId(), 30, 0, 0.3F).setUnlocalizedName("chocoboLegRawItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoboLegCookedItem = new GenericItemFood(8, true).setUnlocalizedName("chocoboLegCookedItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocopediaItem = new GenericItem().setUnlocalizedName("chocopediaItem").setMaxStackSize(1).setCreativeTab(ChocoCreativeTabs.chococraft2);
 		purpleSpawnEggItem = new GenericItem().setUnlocalizedName("purpleSpawnEggItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocoboSaddleItem = new GenericItem().setUnlocalizedName("chocoboSaddleItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocoboSaddleBagItem = new GenericItem().setUnlocalizedName("chocoboSaddleBagItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
-		chocoboPackBagItem = new GenericItem().setUnlocalizedName("chocoboPackBagItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoboSaddleItem = new GenericItem().setUnlocalizedName("chocoboSaddleItem").setMaxStackSize(5).setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoboSaddleBagItem = new GenericItem().setUnlocalizedName("chocoboSaddleBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
+		chocoboPackBagItem = new GenericItem().setUnlocalizedName("chocoboPackBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboWhistleItem = new GenericItem().setUnlocalizedName("chocoboWhistleItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 
 		chocoDisguiseHelm = new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Helm).setUnlocalizedName("chocoDisguiseHelm").setCreativeTab(ChocoCreativeTabs.chococraft2);

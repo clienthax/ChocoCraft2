@@ -1,6 +1,5 @@
 package uk.co.haxyshideout.chococraft2.commands;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -22,9 +21,5 @@ public class DebugCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-
-		if(args == null)
-			return;
-		Minecraft.getMinecraft().gameSettings.guiScale = Integer.parseInt(args[0]);
 	}
 }
