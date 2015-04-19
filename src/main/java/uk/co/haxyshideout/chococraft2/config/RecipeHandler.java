@@ -9,7 +9,7 @@ import uk.co.haxyshideout.haxylib.utils.RecipeHelper;
 /**
  * Created by clienthax on 13/4/2015.
  */
-public class RecipieHandler {
+public class RecipeHandler {
 
 	public static void registerRecipies() {
 		//Recipe to make 3 seeds from a gysahl green
@@ -120,11 +120,6 @@ public class RecipieHandler {
 		//Cooking
 		GameRegistry.addSmelting(Additions.chocoboLegRawItem, new ItemStack(Additions.chocoboLegCookedItem), 1f);
 		GameRegistry.addSmelting(Additions.gysahlRawPicklesItem, new ItemStack(Additions.gysahlCookedPicklesItem), 1f);
-
-
-
-
-
 
 	}
 }

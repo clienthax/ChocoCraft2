@@ -5,12 +5,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import uk.co.haxyshideout.chococraft2.commands.DebugCommand;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
-import uk.co.haxyshideout.chococraft2.config.RecipieHandler;
+import uk.co.haxyshideout.chococraft2.config.RecipeHandler;
 import uk.co.haxyshideout.chococraft2.events.EventHandler;
 import uk.co.haxyshideout.chococraft2.proxys.ServerProxy;
 
@@ -23,16 +22,22 @@ public class ChocoCraft2 {
 	@SidedProxy(clientSide = "uk.co.haxyshideout.chococraft2.proxys.ClientProxy", serverSide = "uk.co.haxyshideout.chococraft2.proxys.ServerProxy")
 	public static ServerProxy proxy;
 
+	@Mod.Instance
+	public static ChocoCraft2 instance;
+
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {
 		Additions.registerAdditions();
+		proxy.registerEntities();
 		proxy.registerRenderers();
-		RecipieHandler.registerRecipies();
+		RecipeHandler.registerRecipies();
+
 	}
 
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
+		proxy.registerEntities();
 	}
 
 	@Mod.EventHandler
