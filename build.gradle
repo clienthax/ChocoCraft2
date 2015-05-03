@@ -25,7 +25,7 @@ idea { module { inheritOutputDirs = true } }
 
 minecraft {
     version = "1.8-11.14.1.1371"
-    mappings = "snapshot_20150412"
+    mappings = "snapshot_20150503"
 }
 
 //sourceSets.main { java.srcDirs = ['main/src']; resources.srcDirs = ['main/resources']; output.resourcesDir = output.classesDir }

@@ -15,5 +15,6 @@ public class Constants {
 	// http://www.minecraftforge.net/wiki/Datawatcher
 	public static final int dataWatcherVariant = 31;
 	public static final int dataWatcherBagType = 30;
+	public static final int dataWatcherSaddled = 29;
 
 }
