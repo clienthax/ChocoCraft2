@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import uk.co.haxyshideout.chococraft2.config.Constants;
+import uk.co.haxyshideout.chococraft2.entities.BagType;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
 /**
@@ -31,6 +32,17 @@ public class ChocoboRenderer extends RenderLiving {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
+		EntityChocobo entityChocobo = (EntityChocobo) entity;
+		String path = "textures/entities/Chocobos/"+ (entityChocobo.isTamed() ? "Tamed" : "Untamed") +"/";
+		if(entityChocobo.getBagType() == BagType.PACK)
+			path += "PackBagged/";
+		else if(entityChocobo.getBagType() == BagType.SADDLE)
+			path += "SaddleBagged/";
+		else if(entityChocobo.isSaddled())
+			path += "Saddled/";
+
+		path +=(entityChocobo.isMale ? "Male" : "Female") +"/"+entityChocobo.getChocoboColor().name().toLowerCase()+"chocobo.png";
+		resourceLocation = new ResourceLocation(Constants.MODID, path);
 		return resourceLocation;
 	}
 }

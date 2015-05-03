@@ -4,6 +4,8 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -17,8 +19,10 @@ public class EntityChocobo extends EntityTameable {
 	public float wingRotation;
 	public float destPos;
 	private float wingRotDelta;
+	public boolean isMale;
 
-	public static enum chocoboColor
+
+	public static enum ChocoboColor
 	{
 		YELLOW,
 		GREEN,
@@ -34,6 +38,7 @@ public class EntityChocobo extends EntityTameable {
 	public EntityChocobo(World world) {
 		super(world);
 		this.setSize(1.3f, 1.9f);
+		isMale = world.rand.nextBoolean();
 
 		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
@@ -64,16 +69,65 @@ public class EntityChocobo extends EntityTameable {
 
 	}
 
+	/*
+	DataWatcher
+	 */
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tagCompound) {
+		super.writeEntityToNBT(tagCompound);
+		tagCompound.setByte("Color", (byte) getChocoboColor().ordinal());
+		tagCompound.setByte("BagType", (byte)getBagType().ordinal());
+		tagCompound.setBoolean("Saddled", isSaddled());
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tagCompound) {
+		super.readEntityFromNBT(tagCompound);
+		setColor(ChocoboColor.values()[tagCompound.getByte("Color")]);
+		setBag(BagType.values()[tagCompound.getByte("BagType")]);
+		setSaddled(tagCompound.getBoolean("Saddled"));
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		//corresponding to enum.ordinal
-		this.dataWatcher.addObject(Constants.dataWatcherVariant, Integer.valueOf(0));//Should this be stored in nbt instead?
+		this.dataWatcher.addObject(Constants.dataWatcherVariant, Byte.valueOf((byte)0));//Should this be stored in nbt instead?
 		//0 for no bag, 1 for saddlebag, 2 for pack bag
 		this.dataWatcher.addObject(Constants.dataWatcherBagType, Byte.valueOf((byte)0));
 		//1 if saddled, 0 if not
 		this.dataWatcher.addObject(Constants.dataWatcherSaddled, Byte.valueOf((byte)0));
 	}
+
+	public void setColor(ChocoboColor color) {
+		dataWatcher.updateObject(Constants.dataWatcherVariant, (byte)color.ordinal());
+	}
+
+	public void setBag(BagType bag) {
+		dataWatcher.updateObject(Constants.dataWatcherBagType, (byte)bag.ordinal());
+	}
+
+	public void setSaddled(boolean saddled) {
+		dataWatcher.updateObject(Constants.dataWatcherSaddled, (byte) (saddled ? 1 : 0));
+	}
+
+	public ChocoboColor getChocoboColor() {
+		return ChocoboColor.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherVariant)];
+	}
+
+	public BagType getBagType() {
+		return BagType.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherBagType)];
+	}
+
+	public boolean isSaddled() {
+		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherSaddled) == 1;
+	}
+
+	/*
+	End of dataWatcher
+	 */
+
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
@@ -115,10 +169,6 @@ public class EntityChocobo extends EntityTameable {
 		jump();
 
 		return false;
-	}
-
-	public boolean isSaddled() {
-		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherSaddled) == 1;
 	}
 
 	@Override
