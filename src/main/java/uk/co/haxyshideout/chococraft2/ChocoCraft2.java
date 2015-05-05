@@ -11,6 +11,7 @@ import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.config.RecipeHandler;
 import uk.co.haxyshideout.chococraft2.events.EventHandler;
+import uk.co.haxyshideout.chococraft2.network.PacketRegistry;
 import uk.co.haxyshideout.chococraft2.proxys.ServerProxy;
 
 /**
@@ -22,7 +23,7 @@ public class ChocoCraft2 {
 	@SidedProxy(clientSide = "uk.co.haxyshideout.chococraft2.proxys.ClientProxy", serverSide = "uk.co.haxyshideout.chococraft2.proxys.ServerProxy")
 	public static ServerProxy proxy;
 
-	@Mod.Instance
+	@Mod.Instance(value = Constants.MODID)
 	public static ChocoCraft2 instance;
 
 	@Mod.EventHandler
@@ -31,7 +32,7 @@ public class ChocoCraft2 {
 		proxy.registerEntities();
 		proxy.registerRenderers();
 		RecipeHandler.registerRecipies();
-
+		PacketRegistry.registerPackets();
 	}
 
 	@Mod.EventHandler

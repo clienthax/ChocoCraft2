@@ -295,6 +295,7 @@ public class ModelChocobo extends ModelBase
 		feather_2.rotateAngleX = head.rotateAngleX;
 		feather_2.rotateAngleY = head.rotateAngleY;
 
+
 		// walking animation
 		this.setRightLegXRotation(MathHelper.cos(f * 0.6662F) * 0.8F * f1);
 		this.setLeftLegXRotation(MathHelper.cos(f * 0.6662F + pi) * 0.8F * f1);

@@ -1,8 +1,5 @@
 package uk.co.haxyshideout.chococraft2.config;
 
-import uk.co.haxyshideout.chococraft2.proxys.ClientProxy;
-import uk.co.haxyshideout.chococraft2.proxys.ServerProxy;
-
 /**
  * Created by clienthax on 12/4/2015.
  */
@@ -16,5 +13,6 @@ public class Constants {
 	public static final int dataWatcherVariant = 31;
 	public static final int dataWatcherBagType = 30;
 	public static final int dataWatcherSaddled = 29;
-
+	public static final int dataWatcherMale = 28;
+	public static final int dataWatcherFollowingOwner = 27;
 }

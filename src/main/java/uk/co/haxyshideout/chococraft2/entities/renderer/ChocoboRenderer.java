@@ -4,7 +4,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -17,10 +16,13 @@ import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
  */
 public class ChocoboRenderer extends RenderLiving {
 
-	ResourceLocation resourceLocation = new ResourceLocation(Constants.MODID, "textures/entities/Chocobos/Untamed/Male/redchocobo.png");
-
 	public ChocoboRenderer(RenderManager rendermanagerIn, ModelBase modelbaseIn) {
 		super(rendermanagerIn, modelbaseIn, 1.5f);
+	}
+
+	@Override
+	public void renderLivingLabel(Entity entityIn, String str, double x, double y, double z, int maxDistance) {
+		super.renderLivingLabel(entityIn, str, x, y+0.2d, z, maxDistance);
 	}
 
 	@Override
@@ -41,8 +43,7 @@ public class ChocoboRenderer extends RenderLiving {
 		else if(entityChocobo.isSaddled())
 			path += "Saddled/";
 
-		path +=(entityChocobo.isMale ? "Male" : "Female") +"/"+entityChocobo.getChocoboColor().name().toLowerCase()+"chocobo.png";
-		resourceLocation = new ResourceLocation(Constants.MODID, path);
-		return resourceLocation;
+		path +=(entityChocobo.isMale() ? "Male" : "Female") +"/"+entityChocobo.getChocoboColor().name().toLowerCase()+"chocobo.png";
+		return new ResourceLocation(Constants.MODID, path);
 	}
 }

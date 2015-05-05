@@ -1,0 +1,29 @@
+
+gysahlStemBlock.name=Gysahl Stem
+strawBlock.name=Straw
+
+item.gysahlGreenItem.name=Gysahl Green
+item.gysahlSeedsItem.name=Gysahl Seeds
+item.gysahlGoldenItem.name=Golden Gysahl
+item.gysahlLoverlyItem.name=Loverly Gysahl
+item.gysahlPinkItem.name=Pink Gysahl
+item.gysahlRedItem.name=Red Gysahl
+item.gysahlRawPicklesItem.name=Raw Gysahl Pickles
+item.gysahlCookedPicklesItem.name=Gysahl Pickles
+item.gysahlCakeItem.name=Gysahl Cake
+item.gysahlChibiItem.name=Chibi Gysahl
+item.chocoboFeatherItem.name=Chocobo Feather
+item.chocoboLegRawItem.name=Raw Chocobo Leg
+item.chocoboLegCookedItem.name=Cooked Chocobo Leg
+item.chocopediaItem.name=Chocopedia
+item.purpleSpawnEggItem.name=Purple Chocobo Egg
+item.chocoboSaddleItem.name=Chocobo Saddle
+item.chocoboSaddleBagItem.name=Chocobo Saddle Bag
+item.chocoboPackBagItem.name=Chocobo Pack Bag
+item.chocoboWhistleItem.name=Chocobo Whistle
+item.chocoDisguiseHelm.name=Chocodisguise Helmet
+item.chocoDisguiseChest.name=Chocodisguise Body
+item.chocoDisguiseLegs.name=Chocodisguise Legs
+item.chocoDisguiseBoots.name=Chocodisguise Boots
+
+itemGroup.Chococraft2=ChocoCraft 2

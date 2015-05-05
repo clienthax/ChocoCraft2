@@ -1,15 +1,20 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
+import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
 
 /**
  * Created by clienthax on 14/4/2015.
@@ -19,10 +24,8 @@ public class EntityChocobo extends EntityTameable {
 	public float wingRotation;
 	public float destPos;
 	private float wingRotDelta;
-	public boolean isMale;
 
-
-	public static enum ChocoboColor
+	public enum ChocoboColor
 	{
 		YELLOW,
 		GREEN,
@@ -35,13 +38,21 @@ public class EntityChocobo extends EntityTameable {
 		PURPLE
 	}
 
+	public enum MovementType
+	{
+		WANDER, FOLLOWOWNER, STAYSTILL
+	}
+
 	public EntityChocobo(World world) {
 		super(world);
-		this.setSize(1.3f, 1.9f);
-		isMale = world.rand.nextBoolean();
+		this.setSize(1.3f, 2.3f);
+		setMale(world.rand.nextBoolean());
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);//set max health to 30
+		setHealth(getMaxHealth());//reset the hp to max
 
 		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 	}
 
 	@Override
@@ -79,6 +90,8 @@ public class EntityChocobo extends EntityTameable {
 		tagCompound.setByte("Color", (byte) getChocoboColor().ordinal());
 		tagCompound.setByte("BagType", (byte)getBagType().ordinal());
 		tagCompound.setBoolean("Saddled", isSaddled());
+		tagCompound.setBoolean("Male", isMale());
+		tagCompound.setByte("MovementType", (byte) getMovementType().ordinal());
 	}
 
 	@Override
@@ -87,41 +100,63 @@ public class EntityChocobo extends EntityTameable {
 		setColor(ChocoboColor.values()[tagCompound.getByte("Color")]);
 		setBag(BagType.values()[tagCompound.getByte("BagType")]);
 		setSaddled(tagCompound.getBoolean("Saddled"));
+		setMale(tagCompound.getBoolean("Male"));
+		setMovementType(MovementType.values()[tagCompound.getByte("MovementType")]);
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		//corresponding to enum.ordinal
-		this.dataWatcher.addObject(Constants.dataWatcherVariant, Byte.valueOf((byte)0));//Should this be stored in nbt instead?
+		this.dataWatcher.addObject(Constants.dataWatcherVariant, (byte)0);
 		//0 for no bag, 1 for saddlebag, 2 for pack bag
-		this.dataWatcher.addObject(Constants.dataWatcherBagType, Byte.valueOf((byte)0));
+		this.dataWatcher.addObject(Constants.dataWatcherBagType, (byte)0);
 		//1 if saddled, 0 if not
-		this.dataWatcher.addObject(Constants.dataWatcherSaddled, Byte.valueOf((byte)0));
+		this.dataWatcher.addObject(Constants.dataWatcherSaddled, (byte)0);
+		//1 if male, 0 if not
+		this.dataWatcher.addObject(Constants.dataWatcherMale, (byte)0);
+		//0 if wandering, 1 if following owner, 2 staying still
+		this.dataWatcher.addObject(Constants.dataWatcherFollowingOwner, (byte) 0);
 	}
 
 	public void setColor(ChocoboColor color) {
 		dataWatcher.updateObject(Constants.dataWatcherVariant, (byte)color.ordinal());
 	}
 
-	public void setBag(BagType bag) {
-		dataWatcher.updateObject(Constants.dataWatcherBagType, (byte)bag.ordinal());
-	}
-
-	public void setSaddled(boolean saddled) {
-		dataWatcher.updateObject(Constants.dataWatcherSaddled, (byte) (saddled ? 1 : 0));
-	}
-
 	public ChocoboColor getChocoboColor() {
 		return ChocoboColor.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherVariant)];
+	}
+
+	public void setBag(BagType bag) {
+		dataWatcher.updateObject(Constants.dataWatcherBagType, (byte)bag.ordinal());
 	}
 
 	public BagType getBagType() {
 		return BagType.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherBagType)];
 	}
 
+	public void setSaddled(boolean saddled) {
+		dataWatcher.updateObject(Constants.dataWatcherSaddled, (byte) (saddled ? 1 : 0));
+	}
+
 	public boolean isSaddled() {
 		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherSaddled) == 1;
+	}
+
+	public void setMale(boolean isMale) {
+		dataWatcher.updateObject(Constants.dataWatcherMale, (byte) (isMale ? 1 : 0));
+	}
+
+	public boolean isMale() {
+		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherMale) == 1;
+	}
+
+	public void setMovementType(MovementType movementType) {
+		dataWatcher.updateObject(Constants.dataWatcherFollowingOwner, (byte)movementType.ordinal());
+	}
+
+	public MovementType getMovementType() {
+		return MovementType.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherFollowingOwner)];
 	}
 
 	/*
@@ -160,13 +195,53 @@ public class EntityChocobo extends EntityTameable {
 		return 150;
 	}
 
+	@Override
 	public boolean interact(EntityPlayer player) {
-		if(isSaddled()) {
+		if(worldObj.isRemote)//return if client
+			return false;
+
+		if(player.getHeldItem() == null && isSaddled()) {//If the player is not holding anything and the chocobo is saddled, mount the chocobo
 			player.mountEntity(this);
 			return true;
-		} else
-		//dataWatcher.updateObject(Constants.dataWatcherSaddled, (byte)1);//TEST LINE
-		jump();
+		}
+
+		if(player.getHeldItem() == null)//Make sure the player is holding something for the following checks
+			return false;
+
+
+		if(player.getHeldItem().getItem() == Additions.gysahlGreenItem) {//random chance of taming + random healing amount
+			//TODO, random chance of taming + random healing amount
+			return true;
+		}
+
+		if(player.getHeldItem().getItem() == Additions.chocoboFeatherItem) {//follow person who clicked if not tamed, otherwise check owner and follow if owner
+			//TODO follow person who clicked if not tamed, otherwise check owner and follow if owner
+			return true;
+		}
+
+		if(!isTamed() || getOwner() != player)//Return if the chocobo is not tamed, as the following require that the chocobo is tamed. and that they are being used by the owner
+			return false;
+
+		if(player.getHeldItem().getItem() == Additions.chocoboSaddleItem && !isSaddled()) {//if the player is holding a saddle and the chocobo is not saddled, saddle the chocobo
+			setSaddled(true);
+			return true;
+		}
+
+		if(player.getHeldItem().getItem() == Additions.chocoboSaddleBagItem && getBagType() == BagType.NONE && isSaddled()) {//holding a saddle bag and no bag on chocobo, chocobo needs to be saddled
+			setBag(BagType.SADDLE);
+			return true;
+		}
+
+		if(player.getHeldItem().getItem() == Additions.chocoboPackBagItem && getBagType() == BagType.NONE) {//holding a pack bag and no bag on chocobo, remove the saddle if the chocobo is saddled
+			setBag(BagType.PACK);
+			return true;
+		}
+
+		if(player.getHeldItem().getItem() == Additions.chocopediaItem) {
+			//TODO, implement chocopedia.. funtimes
+			//TODO send opengui + implement gui handler
+			return true;
+		}
 
 		return false;
 	}

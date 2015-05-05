@@ -2,7 +2,11 @@ package uk.co.haxyshideout.chococraft2.proxys;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
+import uk.co.haxyshideout.chococraft2.client.gui.EnumGui;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
@@ -27,4 +31,5 @@ public class ClientProxy extends ServerProxy {
 		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityChocobo.class, new ChocoboRenderer(manager, new ModelChocobo()));
 	}
+
 }
