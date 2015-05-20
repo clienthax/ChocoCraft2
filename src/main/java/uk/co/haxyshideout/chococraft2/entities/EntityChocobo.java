@@ -1,25 +1,25 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import com.google.common.base.Predicate;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.particle.EntityParticleEmitter;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIAvoidPlayer;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
+import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
 /**
@@ -65,8 +65,8 @@ public class EntityChocobo extends EntityTameable {
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
-		this.tasks.addTask(3, new ChocoboAIAvoidPlayer(this, 4.0F, 1.0D, 1.2D));//Vanilla seems to have a bug with entities larger then 1x1 avoiding something.
-
+		this.tasks.addTask(3, new ChocoboAIAvoidPlayer(this, 10.0F, 1.0D, 1.2D));//TODO remove when tamed - Vanilla seems to have a bug with entities larger then 1x1 avoiding something.
+		this.tasks.addTask(4, new ChocoboAIHealInPen(this));//TODO only when tamed
 	}
 
 	@Override
@@ -201,6 +201,13 @@ public class EntityChocobo extends EntityTameable {
 		return null;
 	}
 
+	@Override
+	public void heal(float healAmount)
+	{
+		super.heal(healAmount);
+		((WorldServer)worldObj).spawnParticle(EnumParticleTypes.HEART, false, posX, posY + 2.5, posZ, 3, 0.3d, 0, 0.3d, 1);
+	}
+
 	/**
 	 * Get number of ticks, at least during which the living entity will be silent.
 	 */
@@ -222,10 +229,8 @@ public class EntityChocobo extends EntityTameable {
 		if(player.getHeldItem() == null)//Make sure the player is holding something for the following checks
 			return false;
 
-
 		if(player.getHeldItem().getItem() == Additions.gysahlGreenItem) {//random chance of taming + random healing amount
-			//TODO, random chance of taming + random healing amount
-			if(!isTamed() && RandomHelper.getChanceResult(10)) {
+			if(!isTamed() && RandomHelper.getChanceResult(10)) {//TODO check if the player has a chocopedia on them, if not give em one and open to the chocobo tamed?
 				setOwnerId(player.getUniqueID().toString());
 				setTamed(true);
 				player.addChatComponentMessage(new ChatComponentText("You tamed the chocobo!"));
