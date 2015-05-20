@@ -69,6 +69,8 @@ public class ChocopediaGui extends GuiScreen {
 
 	@Override
 	public void updateScreen() {
+		if(chocobo.isDead)
+			this.mc.displayGuiScreen(null);
 
 	}
 
@@ -124,7 +126,6 @@ public class ChocopediaGui extends GuiScreen {
 			displayInputBox(InputType.owner);
 		}
 		if(button == applyButton) {
-			//TODO send changes to server in packet
 			PacketRegistry.INSTANCE.sendToServer(new ChocopediaEditPacket(this));
 			this.mc.displayGuiScreen(null);
 		}
