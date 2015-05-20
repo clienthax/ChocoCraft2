@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
-public class ChocoboAIFollowOwner extends EntityAIBase
+public class ChocoboAIFollowLure extends EntityAIBase
 {
 	private EntityChocobo chocobo;
 	private EntityLivingBase theOwner;
@@ -21,7 +21,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	float maxDist;
 	float minDist;
 
-	public ChocoboAIFollowOwner(EntityTameable thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
+	public ChocoboAIFollowLure(EntityTameable thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
 	{
 		this.chocobo = (EntityChocobo)thePetIn;
 		this.theWorld = thePetIn.worldObj;
@@ -33,7 +33,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 
 		if (!(thePetIn.getNavigator() instanceof PathNavigateGround))
 		{
-			throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+			throw new IllegalArgumentException("Unsupported mob type for FollowLureGoal");
 		}
 	}
 
@@ -42,23 +42,23 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	 */
 	public boolean shouldExecute()
 	{
-		EntityLivingBase owner = this.chocobo.getOwnerEntity();
+		EntityLivingBase entityLuring = this.chocobo.getEntityLuring();
 
-		if (owner == null)
+		if (entityLuring == null)
 		{
 			return false;
 		}
-		else if (this.chocobo.getMovementType() != EntityChocobo.MovementType.FOLLOW_OWNER)
+		else if (this.chocobo.getMovementType() != EntityChocobo.MovementType.FOLLOW_LURE)
 		{
 			return false;
 		}
-		else if (this.chocobo.getDistanceSqToEntity(owner) < (double)(this.minDist * this.minDist))
+		else if (this.chocobo.getDistanceSqToEntity(entityLuring) < (double)(this.minDist * this.minDist))
 		{
 			return false;
 		}
 		else
 		{
-			this.theOwner = owner;
+			this.theOwner = entityLuring;
 			return true;
 		}
 	}
@@ -68,7 +68,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	 */
 	public boolean continueExecuting()
 	{
-		return !this.petPathfinder.noPath() && this.chocobo.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist) && chocobo.getMovementType() == EntityChocobo.MovementType.FOLLOW_OWNER;
+		return !this.petPathfinder.noPath() && this.chocobo.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist) && chocobo.getMovementType() == EntityChocobo.MovementType.FOLLOW_LURE;
 	}
 
 	/**

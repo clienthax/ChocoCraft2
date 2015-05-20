@@ -1,19 +1,18 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
+import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
 
 /**
@@ -24,6 +23,7 @@ public class EntityChocobo extends EntityTameable {
 	public float wingRotation;
 	public float destPos;
 	private float wingRotDelta;
+	private EntityPlayerMP entityLuring = null;
 
 	public enum ChocoboColor
 	{
@@ -40,7 +40,7 @@ public class EntityChocobo extends EntityTameable {
 
 	public enum MovementType
 	{
-		WANDER, FOLLOWOWNER, STAYSTILL
+		WANDER, FOLLOW_OWNER, STANDSTILL, FOLLOW_LURE
 	}
 
 	public EntityChocobo(World world) {
@@ -53,6 +53,7 @@ public class EntityChocobo extends EntityTameable {
 		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
+		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
 	}
 
 	@Override
@@ -214,8 +215,21 @@ public class EntityChocobo extends EntityTameable {
 			return true;
 		}
 
-		if(player.getHeldItem().getItem() == Additions.chocoboFeatherItem) {//follow person who clicked if not tamed, otherwise check owner and follow if owner
-			//TODO follow person who clicked if not tamed, otherwise check owner and follow if owner
+		/*
+			Follow the player who clicked the entity if not tamed,
+			if the chocobo is tamed, verify this is the owner, and then follow,
+			if the entity is already following the player, stop following them.
+		 */
+		if(player.getHeldItem().getItem() == Additions.chocoboFeatherItem) {
+			if(getMovementType() == MovementType.FOLLOW_LURE && entityLuring != null && entityLuring == player) {
+				setMovementType(MovementType.STANDSTILL);
+				entityLuring = null;
+				return true;
+			}
+			if((isTamed() && getOwnerId().equals(player.getUniqueID().toString())) || !isTamed()) {
+				setMovementType(MovementType.FOLLOW_LURE);
+				entityLuring = (EntityPlayerMP) player;
+			}
 			return true;
 		}
 
@@ -251,6 +265,9 @@ public class EntityChocobo extends EntityTameable {
 		return 1f;
 	}
 
+	public EntityPlayerMP getEntityLuring() {
+		return entityLuring;
+	}
 
 
 
