@@ -13,8 +13,8 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 import uk.co.haxyshideout.haxylib.items.GenericArmor;
+import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
 import java.util.List;
 
@@ -25,7 +25,6 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 
 	public final Predicate canBeSeenSelector = new Predicate()
 	{
-		private static final String __OBFID = "CL_00001575";
 		public boolean isApplicable(Entity entityIn)
 		{
 			return entityIn.isEntityAlive() && ChocoboAIAvoidPlayer.this.theEntity.getEntitySenses().canSee(entityIn);
@@ -37,7 +36,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	};
 
 	public final Predicate playerSuitSelector = new Predicate()
-	{//returns false if the player is wearing a full chocobo disguise
+	{
 		public boolean apply(Entity entity)
 		{
 			if(entity instanceof EntityPlayer) {
@@ -50,7 +49,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 					}
 				}
 
-				return chance != 100;
+				return !RandomHelper.getChanceResult(chance);
 
 			}
 			return false;
@@ -90,6 +89,9 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	 */
 	public boolean shouldExecute()
 	{
+		if(theEntity.worldObj.getWorldTime() % 15 != 0)
+			return false;
+
 		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
 		if (list.isEmpty())

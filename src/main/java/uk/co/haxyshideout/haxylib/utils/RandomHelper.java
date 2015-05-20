@@ -12,6 +12,8 @@ public class RandomHelper {
 
 	//returns true if random returns a value that is under or equal to the percentage required for success
 	public static boolean getChanceResult(int percentageForSuccess) {
+		if(percentageForSuccess == 0)
+			return false;
 		if(percentageForSuccess >= 0 && percentageForSuccess <= 100)
 			return random.nextInt(100) <= percentageForSuccess;
 		else
