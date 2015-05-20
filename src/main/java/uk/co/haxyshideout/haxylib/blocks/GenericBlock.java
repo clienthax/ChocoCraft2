@@ -9,9 +9,19 @@ import net.minecraft.block.material.Material;
 public class GenericBlock extends Block {
 
 	private boolean opaque = true;
+	private boolean fullcube = true;
 
 	public GenericBlock(Material materialIn) {
 		super(materialIn);
+	}
+
+	public Block setFullCube(boolean fullcube) {
+		this.fullcube = fullcube;
+		return this;
+	}
+
+	public boolean isFullCube() {
+		return fullcube;
 	}
 
 	public Block setOpaque(boolean opaque) {
