@@ -62,13 +62,10 @@ public class EntityChocobo extends EntityTameable {
 		setHealth(getMaxHealth());//reset the hp to max
 
 		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
-		//this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
-//		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
-//		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
-		//this.tasks.addTask(0, new ChocoboAIAvoidPlayer(this, 20.0F, 10.0D, 10.2D));
-		this.tasks.addTask(3, new ChocoboAIAvoidPlayer(this, 4.0F, 10.0D, 10.2D));
-		//this.tasks.addTask(6, new EntityAIWander(this, 1.0D, 10));
-
+		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
+		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
+		this.tasks.addTask(3, new ChocoboAIAvoidPlayer(this, 4.0F, 1.0D, 1.2D));//Vanilla seems to have a bug with entities larger then 1x1 avoiding something.
 
 	}
 

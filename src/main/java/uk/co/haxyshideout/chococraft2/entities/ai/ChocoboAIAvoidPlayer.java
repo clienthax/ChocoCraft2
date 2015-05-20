@@ -4,61 +4,156 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 import uk.co.haxyshideout.haxylib.items.GenericArmor;
-import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
 import java.util.List;
 
 /**
  * Created by clienthax on 20/5/2015.
  */
-public class ChocoboAIAvoidPlayer extends EntityAIAvoidEntity {
+public class ChocoboAIAvoidPlayer extends EntityAIBase {
 
-	public ChocoboAIAvoidPlayer(EntityChocobo chocobo, float searchDistance, double farSpeedIn, double nearSpeedIn) {
-		super(chocobo, new Predicate()
+	public final Predicate canBeSeenSelector = new Predicate()
+	{
+		private static final String __OBFID = "CL_00001575";
+		public boolean isApplicable(Entity entityIn)
 		{
-			public boolean apply(Entity entity)
-			{
-				if(1 == 1)
-					return true;
+			return entityIn.isEntityAlive() && ChocoboAIAvoidPlayer.this.theEntity.getEntitySenses().canSee(entityIn);
+		}
+		public boolean apply(Object p_apply_1_)
+		{
+			return this.isApplicable((Entity)p_apply_1_);
+		}
+	};
 
-				if(entity instanceof EntityPlayer) {
-					EntityPlayer player = (EntityPlayer) entity;
-					int chance = 0;
-					for (ItemStack stack : player.inventory.armorInventory) {
-						if(stack != null) {
-							if(stack.getItem() instanceof GenericArmor)//lazy way..
-								chance += 25;
-						}
+	public final Predicate playerSuitSelector = new Predicate()
+	{//returns false if the player is wearing a full chocobo disguise
+		public boolean apply(Entity entity)
+		{
+			if(entity instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) entity;
+				int chance = 0;
+				for (ItemStack stack : player.inventory.armorInventory) {
+					if(stack != null) {
+						if(stack.getItem() instanceof GenericArmor)//lazy way..
+							chance += 25;
 					}
-
-					return !RandomHelper.getChanceResult(chance);
-
 				}
-				return false;
+
+				return chance != 100;
+
 			}
-			public boolean apply(Object object)
-			{
-				return this.apply((Entity)object);
-			}
-		}, searchDistance, farSpeedIn, nearSpeedIn);
+			return false;
+		}
+		public boolean apply(Object object)
+		{
+			return this.apply((Entity)object);
+		}
+	};
+
+	/** The entity we are attached to */
+	protected EntityCreature theEntity;
+	private double farSpeed;
+	private double nearSpeed;
+	protected Entity closestLivingEntity;
+	private float avoidDistance;
+	/** The PathEntity of our entity */
+	private PathEntity entityPathEntity;
+	/** The PathNavigate of our entity */
+	private PathNavigate entityPathNavigate;
+	private Predicate avoidTargetSelector;
+	private static final String __OBFID = "CL_00001574";
+
+	public ChocoboAIAvoidPlayer(EntityCreature creature, float searchDistance, double farSpeedIn, double nearSpeedIn)
+	{
+		this.theEntity = creature;
+		this.avoidTargetSelector = playerSuitSelector;
+		this.avoidDistance = searchDistance;
+		this.farSpeed = farSpeedIn;
+		this.nearSpeed = nearSpeedIn;
+		this.entityPathNavigate = creature.getNavigator();
+		this.setMutexBits(1);
 	}
 
-	@Override
-	public boolean shouldExecute() {
+	/**
+	 * Returns whether the EntityAIBase should begin execution.
+	 */
+	public boolean shouldExecute()
+	{
+		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
-		boolean superResult = super.shouldExecute();
-
-		if(superResult && ((EntityChocobo)theEntity).isTamed())
+		if (list.isEmpty() || ((EntityChocobo)theEntity).isTamed())
+		{
 			return false;
+		}
 		else
-			return superResult;
+		{
+			this.closestLivingEntity = (Entity)list.get(0);
+			Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, new Vec3(this.closestLivingEntity.posX, this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
+
+			if (vec3 == null)
+			{
+				return false;
+			}
+			else if (this.closestLivingEntity.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < this.closestLivingEntity.getDistanceSqToEntity(this.theEntity))
+			{
+				return false;
+			}
+			else
+			{
+				this.entityPathEntity = this.entityPathNavigate.getPathToPos(new BlockPos(vec3.xCoord, vec3.yCoord, vec3.zCoord));
+				return this.entityPathEntity != null;
+			}
+		}
+	}
+
+	/**
+	 * Returns whether an in-progress EntityAIBase should continue executing
+	 */
+	public boolean continueExecuting()
+	{
+		return !this.entityPathNavigate.noPath();
+	}
+
+	/**
+	 * Execute a one shot task or start executing a continuous task
+	 */
+	public void startExecuting()
+	{
+		this.entityPathNavigate.setPath(this.entityPathEntity, this.farSpeed);
+	}
+
+	/**
+	 * Resets the task
+	 */
+	public void resetTask()
+	{
+		this.closestLivingEntity = null;
+	}
+
+	/**
+	 * Updates the task
+	 */
+	public void updateTask()
+	{
+		if (this.theEntity.getDistanceSqToEntity(this.closestLivingEntity) < 49.0D)
+		{
+			this.theEntity.getNavigator().setSpeed(this.nearSpeed);
+		}
+		else
+		{
+			this.theEntity.getNavigator().setSpeed(this.farSpeed);
+		}
 	}
 
 
