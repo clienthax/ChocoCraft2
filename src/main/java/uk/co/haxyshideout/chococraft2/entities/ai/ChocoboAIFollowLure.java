@@ -21,6 +21,7 @@ public class ChocoboAIFollowLure extends EntityAIBase
 	float maxDist;
 	float minDist;
 
+	//TODO - This can be merged into the follow owner ai task at a future point
 	public ChocoboAIFollowLure(EntityTameable thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
 	{
 		this.chocobo = (EntityChocobo)thePetIn;

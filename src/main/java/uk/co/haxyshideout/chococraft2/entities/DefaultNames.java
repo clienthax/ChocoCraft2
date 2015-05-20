@@ -1,7 +1,5 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.Random;
 
 /**

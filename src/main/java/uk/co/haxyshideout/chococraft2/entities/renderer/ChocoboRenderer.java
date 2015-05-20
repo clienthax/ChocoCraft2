@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import uk.co.haxyshideout.chococraft2.config.Constants;
-import uk.co.haxyshideout.chococraft2.entities.BagType;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
 /**
@@ -36,9 +35,9 @@ public class ChocoboRenderer extends RenderLiving {
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		EntityChocobo entityChocobo = (EntityChocobo) entity;
 		String path = "textures/entities/Chocobos/"+ (entityChocobo.isTamed() ? "Tamed" : "Untamed") +"/";
-		if(entityChocobo.getBagType() == BagType.PACK)
+		if(entityChocobo.getBagType() == EntityChocobo.BagType.PACK)
 			path += "PackBagged/";
-		else if(entityChocobo.getBagType() == BagType.SADDLE)
+		else if(entityChocobo.getBagType() == EntityChocobo.BagType.SADDLE)
 			path += "SaddleBagged/";
 		else if(entityChocobo.isSaddled())
 			path += "Saddled/";

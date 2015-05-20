@@ -37,13 +37,13 @@ public class DebugCommand extends CommandBase {
 		EntityPlayerMP player = (EntityPlayerMP) sender;
 		chocobo.setPosition(player.posX, player.posY, player.posZ);
 		player.worldObj.spawnEntityInWorld(chocobo);
-		chocobo.setTamed(true);
-		chocobo.setOwnerId(((EntityPlayerMP) sender).getUniqueID().toString());
+//		chocobo.setTamed(true);
+//		chocobo.setOwnerId(((EntityPlayerMP) sender).getUniqueID().toString());
 		chocobo.setSaddled(false);
 		chocobo.setCustomNameTag(DefaultNames.getRandomName(chocobo.isMale()));
 		chocobo.setColor(EntityChocobo.ChocoboColor.values()[new Random().nextInt(EntityChocobo.ChocoboColor.values().length)]);
 
-		ChocopediaGui gui = new ChocopediaGui(chocobo);
-		Minecraft.getMinecraft().displayGuiScreen(gui);
+//		ChocopediaGui gui = new ChocopediaGui(chocobo);
+//		Minecraft.getMinecraft().displayGuiScreen(gui);
 	}
 }

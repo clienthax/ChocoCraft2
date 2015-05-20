@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import uk.co.haxyshideout.chococraft2.config.Additions;
-import uk.co.haxyshideout.chococraft2.entities.BagType;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 
@@ -54,15 +53,15 @@ public class DropGearPacket implements IMessage {
 						chocobo.setSaddled(false);
 						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
 					}
-					if(chocobo.getBagType() == BagType.SADDLE) {
-						chocobo.setBag(BagType.NONE);
+					if(chocobo.getBagType() == EntityChocobo.BagType.SADDLE) {
+						chocobo.setBag(EntityChocobo.BagType.NONE);
 						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleBagItem), player);
 					}
-					if (chocobo.getBagType() == BagType.PACK) {
-						chocobo.setBag(BagType.NONE);
+					if (chocobo.getBagType() == EntityChocobo.BagType.PACK) {
+						chocobo.setBag(EntityChocobo.BagType.NONE);
 						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboPackBagItem), player);
 					}
-					//TODO bags
+					//TODO bags - inv and displaying + storage + initing bag inv
 				}
 			}
 
