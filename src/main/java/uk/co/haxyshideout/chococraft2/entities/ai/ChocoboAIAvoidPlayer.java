@@ -92,7 +92,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	{
 		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
-		if (list.isEmpty() || ((EntityChocobo)theEntity).isTamed())
+		if (list.isEmpty())
 		{
 			return false;
 		}

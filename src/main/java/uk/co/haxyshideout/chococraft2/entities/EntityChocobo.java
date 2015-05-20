@@ -31,6 +31,8 @@ public class EntityChocobo extends EntityTameable {
 	public float destPos;
 	private float wingRotDelta;
 	private EntityPlayerMP entityLuring = null;
+	private ChocoboAIAvoidPlayer chocoboAIAvoidPlayer = null;
+	private ChocoboAIHealInPen chocoboAIHealInPen = null;
 
 	public enum ChocoboColor
 	{
@@ -65,8 +67,25 @@ public class EntityChocobo extends EntityTameable {
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
-		this.tasks.addTask(3, new ChocoboAIAvoidPlayer(this, 10.0F, 1.0D, 1.2D));//TODO remove when tamed - Vanilla seems to have a bug with entities larger then 1x1 avoiding something.
-		this.tasks.addTask(4, new ChocoboAIHealInPen(this));//TODO only when tamed
+	}
+
+	@Override
+	public void setupTamedAI() {
+		if(chocoboAIAvoidPlayer == null) {
+			chocoboAIAvoidPlayer = new ChocoboAIAvoidPlayer(this, 10.0F, 1.0D, 1.2D);
+		}
+		if(chocoboAIHealInPen == null) {
+			chocoboAIHealInPen = new ChocoboAIHealInPen(this);
+		}
+
+		tasks.removeTask(chocoboAIAvoidPlayer);
+		tasks.removeTask(chocoboAIHealInPen);
+
+		if(isTamed()) {
+			tasks.addTask(4, chocoboAIHealInPen);
+		} else {
+			tasks.addTask(5, chocoboAIAvoidPlayer);
+		}
 	}
 
 	@Override
@@ -288,7 +307,7 @@ public class EntityChocobo extends EntityTameable {
 
 	@Override
 	public float getJumpUpwardsMotion() {
-		return 1f;
+		return 0.5f;
 	}
 
 	public EntityPlayerMP getEntityLuring() {
