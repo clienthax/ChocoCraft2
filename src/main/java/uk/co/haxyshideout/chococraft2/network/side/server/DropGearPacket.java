@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.entities.BagType;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
+import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 
 import java.util.UUID;
 
@@ -51,30 +52,21 @@ public class DropGearPacket implements IMessage {
 
 					if(chocobo.isSaddled()) {
 						chocobo.setSaddled(false);
-						giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
+						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
 					}
 					if(chocobo.getBagType() == BagType.SADDLE) {
 						chocobo.setBag(BagType.NONE);
-						giveOrDropStack(new ItemStack(Additions.chocoboSaddleBagItem), player);
+						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleBagItem), player);
 					}
 					if (chocobo.getBagType() == BagType.PACK) {
 						chocobo.setBag(BagType.NONE);
-						giveOrDropStack(new ItemStack(Additions.chocoboPackBagItem), player);
+						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboPackBagItem), player);
 					}
 					//TODO bags
 				}
 			}
 
 			return null;
-		}
-
-		private void giveOrDropStack(ItemStack stack, EntityPlayerMP player) {//Give the item to the player, if fails, drops the item on ground at player
-			boolean addedToPlayer = player.inventory.addItemStackToInventory(stack);
-			if(addedToPlayer)
-				return;
-
-			EntityItem entityItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
-			player.worldObj.spawnEntityInWorld(entityItem);
 		}
 
 	}
