@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldProviderHell;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +15,15 @@ import java.util.List;
  * Created by clienthax on 20/5/2015.
  */
 public class WorldHelper {
+
+	public static BlockPos getFirstSolidWithAirAbove(World world, BlockPos pos) {//TODO more efficient way of doing this
+		for(int y = pos.getY(); y < world.getHeight(); y++) {
+			pos = new BlockPos(pos.getX(), y, pos.getZ());
+			if(world.getBlockState(pos).getBlock().isNormalCube() && world.isAirBlock(pos.up()))
+				return pos;
+		}
+		return null;
+	}
 
 	public static List<IBlockState> getBlockstatesInRangeOfEntity(Block blockType, Entity entity, int rangeXZ, int rangeY) {
 		ArrayList<IBlockState> blockStates = new ArrayList<IBlockState>();
@@ -37,5 +48,9 @@ public class WorldHelper {
 		}
 
 		return blockPoses;
+	}
+
+	public static boolean isWorldHell(World world) {
+		return world.provider instanceof WorldProviderHell;
 	}
 }

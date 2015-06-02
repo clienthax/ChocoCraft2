@@ -59,10 +59,12 @@ public class EntityChocobo extends EntityTameable {
 		WANDER, FOLLOW_OWNER, STANDSTILL, FOLLOW_LURE
 	}
 
+
 	public EntityChocobo(World world) {
 		super(world);
 		this.setSize(1.3f, 2.3f);
 		setMale(world.rand.nextBoolean());
+		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);//set max health to 30
 		setHealth(getMaxHealth());//reset the hp to max
 

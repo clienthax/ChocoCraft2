@@ -1,6 +1,7 @@
 package uk.co.haxyshideout.chococraft2;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,12 +28,12 @@ public class ChocoCraft2 {
 	breeding!
 	the special gyshall recipies (red etc)
 	achievements
-	need to make yellow chocobos spawn in world
 	purple egg needs to spawn the bloody chocobo
 	chocobos must stare at people. is best
 	whole config system - use configurate, is awesome. as forges config system sucks.
 	chocopedia text - needs to be translatable
 	chocobos to be ridden properly
+	chocobos seem to go invisible if you walk to close to them
 
 	optimizations:
 	condense booleans in datawatcher.
@@ -42,6 +43,7 @@ public class ChocoCraft2 {
 	implement chocobo whistle, should tp the last chocobo you rode to you aslong as you are in the same world ( spawn near the player?)
 
 	implement our own spawn eggs for all chocobos (a wrapper should be good enough)
+
 
 	 */
 
@@ -63,7 +65,9 @@ public class ChocoCraft2 {
 
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new EventHandler());
+		EventHandler eventHandler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(eventHandler);
+		FMLCommonHandler.instance().bus().register(eventHandler);
 		proxy.registerEntities();
 	}
 
