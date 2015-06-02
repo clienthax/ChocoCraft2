@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -63,6 +64,8 @@ public class ChocopediaEditPacket implements IMessage {
 					GameProfile ownerProfile = MinecraftServer.getServer().getPlayerProfileCache().getGameProfileForUsername(message.ownerName);
 					if(ownerProfile != null) {
 						chocobo.setOwnerId(ownerProfile.getId().toString());
+					} else {
+						ctx.getServerHandler().playerEntity.addChatComponentMessage(new ChatComponentText("Unable to find owner by that name, not applying new owner!"));
 					}
 				}
 			}

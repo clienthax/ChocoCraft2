@@ -1,12 +1,13 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import net.minecraft.client.particle.EntityParticleEmitter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.ChatComponentText;
@@ -14,12 +15,14 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIAvoidPlayer;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
+import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
 /**
@@ -249,9 +252,10 @@ public class EntityChocobo extends EntityTameable {
 			return false;
 
 		if(player.getHeldItem().getItem() == Additions.gysahlGreenItem) {//random chance of taming + random healing amount
-			if(!isTamed() && RandomHelper.getChanceResult(10)) {//TODO check if the player has a chocopedia on them, if not give em one and open to the chocobo tamed?
+			if(!isTamed() && RandomHelper.getChanceResult(10)) {
 				setOwnerId(player.getUniqueID().toString());
 				setTamed(true);
+				InventoryHelper.giveIfMissing(new ItemStack(Additions.chocopediaItem), (EntityPlayerMP)player);
 				player.addChatComponentMessage(new ChatComponentText("You tamed the chocobo!"));
 			}
 			else if(isTamed()) {
@@ -297,8 +301,7 @@ public class EntityChocobo extends EntityTameable {
 		}
 
 		if(player.getHeldItem().getItem() == Additions.chocopediaItem) {
-			//TODO, implement chocopedia.. funtimes
-			//TODO send opengui + implement gui handler
+			Minecraft.getMinecraft().displayGuiScreen(new ChocopediaGui(this));//As were not using a container we can do this purely on the client, its verified server side when the data is recieved.
 			return true;
 		}
 
