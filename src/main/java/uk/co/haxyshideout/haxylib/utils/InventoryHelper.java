@@ -15,8 +15,10 @@ public class InventoryHelper {
 	 * @param player the player to give the stack to
 	 */
 	public static void giveIfMissing(ItemStack stack, EntityPlayerMP player) {
-		if(!player.inventory.hasItemStack(stack))
+		if(!player.inventory.hasItemStack(stack)) {
 			player.inventory.addItemStackToInventory(stack);
+			player.inventoryContainer.detectAndSendChanges();//mc is stupid and needs this to "show" the item
+		}
 	}
 
 	/**
@@ -26,8 +28,10 @@ public class InventoryHelper {
 	 */
 	public static void giveOrDropStack(ItemStack stack, EntityPlayerMP player) {
 		boolean addedToPlayer = player.inventory.addItemStackToInventory(stack);
-		if(addedToPlayer)
+		if(addedToPlayer) {
+			player.inventoryContainer.detectAndSendChanges();//mc is stupid and needs this to "show" the item
 			return;
+		}
 
 		EntityItem entityItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
 		player.worldObj.spawnEntityInWorld(entityItem);
