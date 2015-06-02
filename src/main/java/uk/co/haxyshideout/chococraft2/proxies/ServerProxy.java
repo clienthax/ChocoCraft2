@@ -1,4 +1,4 @@
-package uk.co.haxyshideout.chococraft2.proxys;
+package uk.co.haxyshideout.chococraft2.proxies;
 
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;

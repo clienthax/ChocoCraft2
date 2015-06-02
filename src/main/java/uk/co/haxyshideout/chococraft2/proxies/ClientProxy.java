@@ -1,17 +1,13 @@
-package uk.co.haxyshideout.chococraft2.proxys;
+package uk.co.haxyshideout.chococraft2.proxies;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
-import uk.co.haxyshideout.chococraft2.client.gui.EnumGui;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
-import uk.co.haxyshideout.chococraft2.entities.renderer.ChocoboRenderer;
 import uk.co.haxyshideout.chococraft2.entities.models.ModelChocobo;
+import uk.co.haxyshideout.chococraft2.entities.renderer.ChocoboRenderer;
 import uk.co.haxyshideout.haxylib.utils.RegistryHelper;
 
 /**

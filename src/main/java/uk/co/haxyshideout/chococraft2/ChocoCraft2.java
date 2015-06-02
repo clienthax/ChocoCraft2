@@ -6,14 +6,13 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import uk.co.haxyshideout.chococraft2.commands.DebugCommand;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.config.RecipeHandler;
 import uk.co.haxyshideout.chococraft2.events.EventHandler;
 import uk.co.haxyshideout.chococraft2.network.PacketRegistry;
-import uk.co.haxyshideout.chococraft2.proxys.ServerProxy;
+import uk.co.haxyshideout.chococraft2.proxies.ServerProxy;
 
 /**
  * Created by clienthax on 12/4/2015.
@@ -46,7 +45,7 @@ public class ChocoCraft2 {
 
 	 */
 
-	@SidedProxy(clientSide = "uk.co.haxyshideout.chococraft2.proxys.ClientProxy", serverSide = "uk.co.haxyshideout.chococraft2.proxys.ServerProxy")
+	@SidedProxy(clientSide = "uk.co.haxyshideout.chococraft2.proxies.ClientProxy", serverSide = "uk.co.haxyshideout.chococraft2.proxies.ServerProxy")
 	public static ServerProxy proxy;
 
 	@Mod.Instance(value = Constants.MODID)
