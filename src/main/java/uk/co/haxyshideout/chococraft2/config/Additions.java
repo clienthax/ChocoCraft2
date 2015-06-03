@@ -8,6 +8,7 @@ import net.minecraft.potion.Potion;
 import net.minecraftforge.common.util.EnumHelper;
 import uk.co.haxyshideout.chococraft2.blocks.GysahlStemBlock;
 import uk.co.haxyshideout.chococraft2.blocks.StrawBlock;
+import uk.co.haxyshideout.chococraft2.items.PurpleSpawnEggItem;
 import uk.co.haxyshideout.haxylib.items.GenericArmor;
 import uk.co.haxyshideout.haxylib.items.GenericItem;
 import uk.co.haxyshideout.haxylib.items.GenericItemFood;
@@ -71,7 +72,7 @@ public class Additions {
 		chocoboLegRawItem = new GenericItemFood(4, 0.3F, true).setPotionEffect(Potion.hunger.getId(), 30, 0, 0.3F).setUnlocalizedName("chocoboLegRawItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboLegCookedItem = new GenericItemFood(8, true).setUnlocalizedName("chocoboLegCookedItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocopediaItem = new GenericItem().setUnlocalizedName("chocopediaItem").setMaxStackSize(1).setCreativeTab(ChocoCreativeTabs.chococraft2);
-		purpleSpawnEggItem = new GenericItem().setUnlocalizedName("purpleSpawnEggItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+		purpleSpawnEggItem = new PurpleSpawnEggItem().setUnlocalizedName("purpleSpawnEggItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboSaddleItem = new GenericItem().setUnlocalizedName("chocoboSaddleItem").setMaxStackSize(5).setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboSaddleBagItem = new GenericItem().setUnlocalizedName("chocoboSaddleBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
 		chocoboPackBagItem = new GenericItem().setUnlocalizedName("chocoboPackBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
