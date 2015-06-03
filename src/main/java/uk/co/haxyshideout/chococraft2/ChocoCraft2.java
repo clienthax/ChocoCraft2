@@ -23,10 +23,8 @@ public class ChocoCraft2 {
 	/*
 	TODO list
 	chicibos + growing + growing by cake
-	chocobo bag code
 	special ability code (possibly a extra handler for this), flying , falling damage, fire proof, speed etc
 	breeding!
-	the special gyshall recipies (red etc)
 	achievements
 	purple egg needs to spawn the bloody chocobo
 	chocobos must stare at people. is best
@@ -35,6 +33,7 @@ public class ChocoCraft2 {
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
 
+	finish up chocopedia gui buttons (follow etc)
 	optimizations:
 	condense booleans in datawatcher.
 

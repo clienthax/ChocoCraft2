@@ -19,6 +19,7 @@ public class ChocoboAIHealInPen extends EntityAIBase {
 
 	public ChocoboAIHealInPen(EntityChocobo chocobo) {
 		this.chocobo = chocobo;
+		setMutexBits(3);
 	}
 
 	@Override

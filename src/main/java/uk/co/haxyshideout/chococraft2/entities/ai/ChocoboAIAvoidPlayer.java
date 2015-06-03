@@ -71,7 +71,6 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/** The PathNavigate of our entity */
 	private PathNavigate entityPathNavigate;
 	private Predicate avoidTargetSelector;
-	private static final String __OBFID = "CL_00001574";
 
 	public ChocoboAIAvoidPlayer(EntityCreature creature, float searchDistance, double farSpeedIn, double nearSpeedIn)
 	{
@@ -92,7 +91,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 		if(theEntity.worldObj.getWorldTime() % 15 != 0)
 			return false;
 
-		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
+		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector));
 
 		if (list.isEmpty())
 		{

@@ -89,7 +89,7 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 			newChocobo.setColor(chocoboColor);
 			newChocobo.setLocationAndAngles(chocoPos.getX(), chocoPos.getY() + 1, chocoPos.getZ(), chocoRotYawn, 0.0F);
 			world.spawnEntityInWorld(newChocobo);
-			System.out.println("spawned chobobo at "+chocoPos.toString());
+//			System.out.println("spawned chobobo at "+chocoPos.toString());
 			spawnedChocobos++;
 			if(spawnedChocobos >= randomGroupSize)
 				break;

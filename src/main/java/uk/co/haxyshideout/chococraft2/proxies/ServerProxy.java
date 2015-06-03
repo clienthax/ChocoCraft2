@@ -22,4 +22,8 @@ public class ServerProxy {
 	public void registerWorldGenerators() {
 		GameRegistry.registerWorldGenerator(new GysahlGen(), 1);//TODO config option for weight
 	}
+
+	public void openChocopedia(EntityChocobo chocobo) {
+
+	}
 }

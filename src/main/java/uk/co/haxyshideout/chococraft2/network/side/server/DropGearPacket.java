@@ -48,20 +48,7 @@ public class DropGearPacket implements IMessage {
 				EntityChocobo chocobo = (EntityChocobo) entity;
 				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 				if(player == chocobo.getOwner()) {//Verify that the person who sent the packet is the owner of the chocobo
-
-					if(chocobo.isSaddled()) {
-						chocobo.setSaddled(false);
-						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
-					}
-					if(chocobo.getBagType() == EntityChocobo.BagType.SADDLE) {
-						chocobo.setBag(EntityChocobo.BagType.NONE);
-						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleBagItem), player);
-					}
-					if (chocobo.getBagType() == EntityChocobo.BagType.PACK) {
-						chocobo.setBag(EntityChocobo.BagType.NONE);
-						InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboPackBagItem), player);
-					}
-					//TODO bags - inv and displaying + storage + initing bag inv
+					chocobo.dropGear(ctx.getServerHandler().playerEntity);
 				}
 			}
 

@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 /**
  * Created by clienthax on 12/4/2015.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class GenericBlock extends Block {
 
 	private boolean opaque = true;

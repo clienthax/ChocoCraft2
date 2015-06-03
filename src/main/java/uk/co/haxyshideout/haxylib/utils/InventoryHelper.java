@@ -3,6 +3,8 @@ package uk.co.haxyshideout.haxylib.utils;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Created by clienthax on 20/5/2015.
@@ -35,6 +37,11 @@ public class InventoryHelper {
 
 		EntityItem entityItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
 		player.worldObj.spawnEntityInWorld(entityItem);
+	}
+
+	public static void dropStack(ItemStack stack, World world, double x, double y, double z) {
+		EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+		world.spawnEntityInWorld(entityItem);
 	}
 
 }

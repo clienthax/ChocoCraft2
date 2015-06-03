@@ -29,7 +29,7 @@ public class BushGen {
 		this.blockState = state;
 	}
 
-	public boolean generate(World worldIn, Random rand, BlockPos position)
+	public void generate(World worldIn, Random rand, BlockPos position)
 	{
 		for (int i = 0; i < 64; ++i)
 		{
@@ -40,8 +40,6 @@ public class BushGen {
 				worldIn.setBlockState(blockPos, this.blockState, 2);
 			}
 		}
-
-		return true;
 	}
 
 }

@@ -1,21 +1,30 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
+import net.minecraft.block.BlockChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.AnimalChest;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.IInvBasic;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
+import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIAvoidPlayer;
@@ -25,17 +34,20 @@ import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by clienthax on 14/4/2015.
  */
-public class EntityChocobo extends EntityTameable {
+public class EntityChocobo extends EntityTameable implements IInvBasic {
 
 	public float wingRotation;
 	public float destPos;
 	private float wingRotDelta;
 	private EntityPlayerMP entityLuring = null;
-	private ChocoboAIAvoidPlayer chocoboAIAvoidPlayer = null;
-	private ChocoboAIHealInPen chocoboAIHealInPen = null;
+	private ChocoboAIAvoidPlayer chocoboAIAvoidPlayer;
+	private ChocoboAIHealInPen chocoboAIHealInPen;
+	private AnimalChest chocoboChest;
 
 	public enum ChocoboColor
 	{
@@ -72,6 +84,8 @@ public class EntityChocobo extends EntityTameable {
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
+
+		initChest();
 	}
 
 	@Override
@@ -130,6 +144,23 @@ public class EntityChocobo extends EntityTameable {
 		tagCompound.setBoolean("Saddled", isSaddled());
 		tagCompound.setBoolean("Male", isMale());
 		tagCompound.setByte("MovementType", (byte) getMovementType().ordinal());
+
+		if(getBagType() != BagType.NONE) {
+			NBTTagList nbttaglist = new NBTTagList();
+
+			for (int i = 0; i < chocoboChest.getSizeInventory(); ++i) {
+				ItemStack itemstack = chocoboChest.getStackInSlot(i);
+
+				if (itemstack != null) {
+					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+					nbttagcompound1.setByte("Slot", (byte)i);
+					itemstack.writeToNBT(nbttagcompound1);
+					nbttaglist.appendTag(nbttagcompound1);
+				}
+			}
+
+			tagCompound.setTag("Items", nbttaglist);
+		}
 	}
 
 	@Override
@@ -140,6 +171,22 @@ public class EntityChocobo extends EntityTameable {
 		setSaddled(tagCompound.getBoolean("Saddled"));
 		setMale(tagCompound.getBoolean("Male"));
 		setMovementType(MovementType.values()[tagCompound.getByte("MovementType")]);
+
+		if(getBagType() != BagType.NONE) {
+			NBTTagList nbttaglist = tagCompound.getTagList("Items", 10);
+			initChest();
+
+			for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+				int j = nbttagcompound1.getByte("Slot") & 255;
+
+				if (j >= 0 && j < chocoboChest.getSizeInventory())
+				{
+					chocoboChest.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -167,6 +214,7 @@ public class EntityChocobo extends EntityTameable {
 
 	public void setBag(BagType bag) {
 		dataWatcher.updateObject(Constants.dataWatcherBagType, (byte)bag.ordinal());
+		initChest();
 	}
 
 	public BagType getBagType() {
@@ -242,12 +290,23 @@ public class EntityChocobo extends EntityTameable {
 
 	@Override
 	public boolean interact(EntityPlayer player) {
-		if(worldObj.isRemote)//return if client
+
+		if(!worldObj.isRemote)
+		if(player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player) {
+			ChocoCraft2.proxy.openChocopedia(this);
+			return true;
+		}
+
+		if (worldObj.isRemote)//return if client
 			return false;
 
-		if(player.getHeldItem() == null && isSaddled()) {//If the player is not holding anything and the chocobo is saddled, mount the chocobo
+		if(player.getHeldItem() == null && isSaddled() && !player.isSneaking()) {//If the player is not holding anything and the chocobo is saddled, mount the chocobo
 			player.mountEntity(this);
 			return true;
+		}
+
+		if(player.isSneaking() && getBagType() != BagType.NONE) {
+			player.displayGUIChest(chocoboChest);
 		}
 
 		if(player.getHeldItem() == null)//Make sure the player is holding something for the following checks
@@ -302,11 +361,6 @@ public class EntityChocobo extends EntityTameable {
 			return true;
 		}
 
-		if(player.getHeldItem().getItem() == Additions.chocopediaItem) {
-			Minecraft.getMinecraft().displayGuiScreen(new ChocopediaGui(this));//As were not using a container we can do this purely on the client, its verified server side when the data is recieved.
-			return true;
-		}
-
 		return false;
 	}
 
@@ -319,6 +373,93 @@ public class EntityChocobo extends EntityTameable {
 		return entityLuring;
 	}
 
+	@Override
+	protected boolean isMovementBlocked()
+	{
+		return this.riddenByEntity != null;
+	}
+
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+		dropGear(null);
+	}
+
+	//Inv stuff
+
+	public void initChest() {
+		AnimalChest animalChest = chocoboChest;
+		chocoboChest = new AnimalChest("ChocoboChest", getChestSize());
+		chocoboChest.setCustomName(getCustomNameTag());
+
+		if(animalChest != null) {
+			animalChest.func_110132_b(this);
+			int i = Math.min(animalChest.getSizeInventory(), this.chocoboChest.getSizeInventory());
+			for (int j = 0; j < i; ++j)
+			{
+				ItemStack itemstack = animalChest.getStackInSlot(j);
+				if (itemstack != null)
+				{
+					this.chocoboChest.setInventorySlotContents(j, itemstack.copy());
+				}
+			}
+		}
+		this.chocoboChest.func_110134_a(this);
+	}
+
+	public int getChestSize() {
+		if(getBagType() == BagType.NONE)
+			return 0;
+		if(getBagType() == BagType.PACK)
+			return 54;
+		if(getBagType() == BagType.SADDLE)
+			return 27;
+		return 0;
+	}
+
+	@Override
+	public void onInventoryChanged(InventoryBasic inventoryBasic) {
+
+	}
+
+	public void dropGear(@Nullable EntityPlayerMP player) {
+		if(worldObj.isRemote)
+			return;
+
+		if(chocoboChest != null) {
+			for (int slot = 0; slot < chocoboChest.getSizeInventory(); slot++) {
+				ItemStack itemStack = chocoboChest.getStackInSlot(slot);
+				if(itemStack != null) {
+					if (player != null)
+						InventoryHelper.giveOrDropStack(itemStack, player);
+					else
+						entityDropItem(itemStack, 0);
+				}
+			}
+		}
+		if(isSaddled()) {
+			setSaddled(false);
+			if(player != null)
+				InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
+			else
+				entityDropItem(new ItemStack(Additions.chocoboSaddleBagItem), 0);
+		}
+		if(getBagType() == EntityChocobo.BagType.SADDLE) {
+			setBag(EntityChocobo.BagType.NONE);
+			if(player != null)
+				InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleBagItem), player);
+			else
+				entityDropItem(new ItemStack(Additions.chocoboSaddleBagItem), 0);
+		}
+		if (getBagType() == EntityChocobo.BagType.PACK) {
+			setBag(EntityChocobo.BagType.NONE);
+			if(player != null)
+				InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboPackBagItem), player);
+			else
+				entityDropItem(new ItemStack(Additions.chocoboPackBagItem), 0);
+		}
+	}
 
 
 }

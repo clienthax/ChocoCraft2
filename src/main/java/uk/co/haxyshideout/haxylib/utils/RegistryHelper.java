@@ -19,6 +19,10 @@ import java.lang.reflect.Field;
  */
 public class RegistryHelper {
 
+	public static void addEntityEgg() {
+
+	}
+
 	public static void registerFieldsWithGameRegistry(String modid, Class clazz) {
 		try {
 			JsonGenerator.setModID(modid);
