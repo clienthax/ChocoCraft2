@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import uk.co.haxyshideout.haxylib.utils.RecipeHelper;
 
 /**
@@ -120,6 +121,18 @@ public class RecipeHandler {
 		//Cooking
 		GameRegistry.addSmelting(Additions.chocoboLegRawItem, new ItemStack(Additions.chocoboLegCookedItem), 1f);
 		GameRegistry.addSmelting(Additions.gysahlRawPicklesItem, new ItemStack(Additions.gysahlCookedPicklesItem), 1f);
+
+		//Gysahls
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(Additions.gysahlRedItem),
+				Additions.gysahlGreenItem,
+				"dyeRed"
+		));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(
+				new ItemStack(Additions.gysahlPinkItem),
+				Additions.gysahlGreenItem,
+				"dyePink"
+		));
 
 	}
 }
