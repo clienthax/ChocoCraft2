@@ -1,23 +1,18 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import net.minecraft.block.BlockChest;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.AnimalChest;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInvBasic;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -27,10 +22,7 @@ import net.minecraft.world.WorldServer;
 import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
-import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIAvoidPlayer;
-import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
-import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
-import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
+import uk.co.haxyshideout.chococraft2.entities.ai.*;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 
@@ -84,6 +76,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
+		this.tasks.addTask(0, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
 
 		initChest();
 	}
