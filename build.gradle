@@ -24,8 +24,8 @@ archivesBaseName = "ChocoCraft2"
 idea { module { inheritOutputDirs = true } }
 
 minecraft {
-    version = "1.8-11.14.1.1371"
-    mappings = "snapshot_20150503"
+    version = "1.8-11.14.2.1431"
+    mappings = "snapshot_20150604"
 }
 
 //sourceSets.main { java.srcDirs = ['main/src']; resources.srcDirs = ['main/resources']; output.resourcesDir = output.classesDir }
