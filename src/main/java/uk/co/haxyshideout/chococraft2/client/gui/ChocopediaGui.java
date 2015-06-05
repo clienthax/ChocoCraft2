@@ -59,6 +59,7 @@ public class ChocopediaGui extends GuiScreen {
 		dropGearButton = new GuiButton(componentID++, xPos, yPos+=48, 90, 20, "Drop Gear");
 		inputTextField = new GuiTextField(componentID++, fontRendererObj, xPos, 24, 100, 20);
 		inputTextField.setVisible(false);
+		updateMovementButton();
 
 		buttonList.add(renameButton);
 		buttonList.add(followOwnerButton);
@@ -120,7 +121,7 @@ public class ChocopediaGui extends GuiScreen {
 			displayInputBox(InputType.name);
 		}
 		if(button == followOwnerButton) {
-			//TODO
+			changeMovementType();
 		}
 		if(button == changeOwnerButton) {
 			displayInputBox(InputType.owner);
@@ -132,6 +133,38 @@ public class ChocopediaGui extends GuiScreen {
 		if(button == dropGearButton) {
 			PacketRegistry.INSTANCE.sendToServer(new DropGearPacket(chocobo));
 			this.mc.displayGuiScreen(null);
+		}
+	}
+
+	private void changeMovementType() {
+		switch (movementType) {
+			case STANDSTILL:
+				movementType = EntityChocobo.MovementType.FOLLOW_OWNER;
+				break;
+			case FOLLOW_OWNER:
+				movementType = EntityChocobo.MovementType.WANDER;
+				break;
+			case WANDER:
+				movementType = EntityChocobo.MovementType.STANDSTILL;
+				break;
+		}
+		updateMovementButton();
+	}
+
+	private void updateMovementButton() {
+		switch (movementType) {
+			case STANDSTILL:
+				followOwnerButton.displayString =  "Stand Still";
+				break;
+			case FOLLOW_OWNER:
+				followOwnerButton.displayString = "Follow Owner";
+				break;
+			case WANDER:
+				followOwnerButton.displayString = "Wander";
+				break;
+			default:
+				followOwnerButton.displayString = "ERROR";
+				break;
 		}
 	}
 

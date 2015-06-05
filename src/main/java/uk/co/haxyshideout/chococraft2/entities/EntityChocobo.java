@@ -384,7 +384,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	@Override
 	protected boolean isMovementBlocked()
 	{
-		return this.riddenByEntity != null;
+		return this.riddenByEntity != null || getMovementType() == MovementType.STANDSTILL;
 	}
 
 	@Override
