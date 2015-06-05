@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class FormattingHelper {
 
 	/**
-	 * Converts the formatting oodes from &x format to the internal format used by mc.
+	 * Converts the formatting oodes from {@literal &}x format to the internal format used by mc.
 	 * @param readable the string to swap the control codes for
 	 */
 	public static String convertFormattingCodes(String readable) {

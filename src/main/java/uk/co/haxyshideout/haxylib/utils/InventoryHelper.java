@@ -3,7 +3,6 @@ package uk.co.haxyshideout.haxylib.utils;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -12,7 +11,7 @@ import net.minecraft.world.World;
 public class InventoryHelper {
 
 	/**
-	 * Gives the player a @see ItemStack if they do not already have it in their inventory
+	 * Gives the player a {@link ItemStack} if they do not already have it in their inventory
 	 * @param stack the ItemStack to give to the player if not present
 	 * @param player the player to give the stack to
 	 */

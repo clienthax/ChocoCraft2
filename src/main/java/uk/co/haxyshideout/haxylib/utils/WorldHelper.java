@@ -16,6 +16,26 @@ import java.util.List;
  */
 public class WorldHelper {
 
+	public static boolean isHellWorld(World world) {
+		return world.provider instanceof WorldProviderHell;
+	}
+
+	public static boolean isBlockAtPositionLiquid(World world, BlockPos pos) {
+		return world.getBlockState(pos).getBlock().getMaterial().isLiquid();
+	}
+
+	public static boolean isNormalCubesAround(World world, BlockPos pos) {
+		for(int x = pos.getX() -1; x <= pos.getX() + 1; x++)
+			for(int z = pos.getZ() -1; z <= pos.getZ() + 1; z++)
+				if(!isNormalBlockAtPos(world, pos.add(x,0,z)))
+					return false;
+		return true;
+	}
+
+	private static boolean isNormalBlockAtPos(World world, BlockPos pos) {
+		return world.getBlockState(pos).getBlock().isNormalCube();
+	}
+
 	public static BlockPos getFirstSolidWithAirAbove(World world, BlockPos pos) {//TODO more efficient way of doing this
 		for(int y = pos.getY(); y < world.getHeight(); y++) {
 			pos = new BlockPos(pos.getX(), y, pos.getZ());
@@ -50,7 +70,4 @@ public class WorldHelper {
 		return blockPoses;
 	}
 
-	public static boolean isWorldHell(World world) {
-		return world.provider instanceof WorldProviderHell;
-	}
 }

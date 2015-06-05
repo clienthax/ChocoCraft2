@@ -27,15 +27,15 @@ public class ChocoCraft2 {
 	breeding!
 	achievements
 	purple egg needs to spawn the bloody chocobo
-	chocobos must stare at people. is best
 	whole config system - use configurate, is awesome. as forges config system sucks.
-	chocopedia text - needs to be translatable
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
+	chocobos need to drop feathers occasionally
 
 	finish up chocopedia gui buttons (follow etc)
 	optimizations:
 	condense booleans in datawatcher.
+	move out any reusable functions to haxylib
 
 	additions:
 	dyable collars! - going to need to get that bloody image generator working for this stuff..

@@ -26,7 +26,7 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 		int outerSpawnRadius = 64;
 		int innerSpawnRadius = 32;
 
-		if(world.provider instanceof WorldProviderHell)
+		if(WorldHelper.isHellWorld(world))
 		{
 			outerSpawnRadius = 48;
 		}
@@ -44,9 +44,12 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 				randDeltaX *= -1;
 			if(world.rand.nextBoolean())
 				randDeltaZ *= -1;
-			canSpawnHere = canChocoboSpawnInBiome(world, pos.add(randDeltaX, 0, randDeltaZ));
-			if(world.provider instanceof WorldProviderHell)
+
+			if(WorldHelper.isHellWorld(world))
 				canSpawnHere = true;//purple chocobos only..
+			else
+				canSpawnHere = canChocoboSpawnInBiome(world, pos.add(randDeltaX, 0, randDeltaZ));//Normal chocobos
+
 			if(isOtherPlayerNear(world, pos.add(randDeltaX, 0, randDeltaZ), innerSpawnRadius / 2))
 				canSpawnHere = false;
 			if(canSpawnHere)
@@ -75,7 +78,7 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 
 		for(int i = 0; i < maxAttempts; i++) {
 			BlockPos chocoPos = pos.add(randDeltaX + world.rand.nextInt(6), 0, randDeltaZ + world.rand.nextInt(6));
-			if(world.provider instanceof WorldProviderHell)
+			if(WorldHelper.isHellWorld(world))
 				chocoPos = WorldHelper.getFirstSolidWithAirAbove(world, chocoPos);
 			else
 				chocoPos = world.getTopSolidOrLiquidBlock(chocoPos);
@@ -84,7 +87,7 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 				continue;
 
 			int chocoRotYawn = world.rand.nextInt(360);
-			EntityChocobo.ChocoboColor chocoboColor = world.provider instanceof WorldProviderHell ? EntityChocobo.ChocoboColor.PURPLE : EntityChocobo.ChocoboColor.YELLOW;
+			EntityChocobo.ChocoboColor chocoboColor = WorldHelper.isHellWorld(world) ? EntityChocobo.ChocoboColor.PURPLE : EntityChocobo.ChocoboColor.YELLOW;
 			EntityChocobo newChocobo = new EntityChocobo(world);
 			newChocobo.setColor(chocoboColor);
 			newChocobo.setLocationAndAngles(chocoPos.getX(), chocoPos.getY() + 1, chocoPos.getZ(), chocoRotYawn, 0.0F);
@@ -117,34 +120,22 @@ public class ChocoboSpawner {//TODO This whole thing was adapted from the ancien
 	}
 
 	private static boolean canChocoboSpawnAtLocation(World world, BlockPos pos) {
-		if(!isNormalCubesAround(world, pos.down()))
+		if(!WorldHelper.isNormalCubesAround(world, pos.down()))
 			return false;
 
-		if(isNormalCubesAround(world, pos))
+		if(WorldHelper.isNormalCubesAround(world, pos))
 			return false;
 
-		if(world.getBlockState(pos).getBlock().getMaterial().isLiquid())
+		if(WorldHelper.isBlockAtPositionLiquid(world, pos))
 			return false;
 
-		if(isNormalCubesAround(world, pos.up()))
+		if(WorldHelper.isNormalCubesAround(world, pos.up()))
 			return false;
 
-		if(!isNormalCubesAround(world, pos.up().up()))
+		if(!WorldHelper.isNormalCubesAround(world, pos.up().up()))
 			return true;
 
 		return true;
-	}
-
-	public static boolean isNormalCubesAround(World world, BlockPos pos) {
-		for(int x = pos.getX() -1; x <= pos.getX() + 1; x++)
-			for(int z = pos.getZ() -1; z <= pos.getZ() + 1; z++)
-				if(!isNormalBlockAtPos(world, pos.add(x,0,z)))
-					return false;
-		return true;
-	}
-
-	private static boolean isNormalBlockAtPos(World world, BlockPos pos) {
-		return world.getBlockState(pos).getBlock().isNormalCube();
 	}
 
 	private static boolean canChocoboSpawnInBiome(World world, BlockPos pos) {
