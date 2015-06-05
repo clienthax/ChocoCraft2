@@ -28,6 +28,14 @@ minecraft {
     mappings = "snapshot_20150604"
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'ninja.leaping.configurate:configurate-hocon:1.1.1'
+}
+
 //sourceSets.main { java.srcDirs = ['main/src']; resources.srcDirs = ['main/resources']; output.resourcesDir = output.classesDir }
 
 processResources
@@ -44,7 +52,6 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-        include 'Pixelmon.info'
     }
     
     from(sourceSets.main.allSource) {
@@ -60,9 +67,6 @@ processResources
 jar {
     classifier = 'universal'
     version = "${project.minecraft.version}-${project.version}"
-    manifest {
-        attributes 'FMLAT': 'pixelmon_at.cfg'
-    }
 }
 
 task sourceJar(type: Jar) {
