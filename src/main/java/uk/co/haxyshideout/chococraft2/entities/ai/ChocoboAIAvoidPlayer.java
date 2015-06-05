@@ -88,7 +88,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	 */
 	public boolean shouldExecute()
 	{
-		if(theEntity.worldObj.getWorldTime() % 15 != 0)
+		if(theEntity.worldObj.getWorldTime() % 10 != 0)
 			return false;
 
 		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector));
