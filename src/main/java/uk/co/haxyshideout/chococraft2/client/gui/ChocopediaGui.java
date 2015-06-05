@@ -85,7 +85,7 @@ public class ChocopediaGui extends GuiScreen {
 
 		drawString(fontRendererObj, "Name: "+name, xPos, yPos+=24, -8355712);//gray
 		drawString(fontRendererObj, "Owner: "+owner, xPos, yPos+=12, -8355712);
-		drawString(fontRendererObj, "Health: "+chocobo.getHealth(), xPos, yPos+=12, -8355712);
+		drawString(fontRendererObj, "Health: "+chocobo.getHealth()+"/"+chocobo.getMaxHealth(), xPos, yPos+=12, -8355712);
 		drawString(fontRendererObj, "Sex: "+(chocobo.isMale() ? "Male" : "Female"), xPos, yPos+=12, -8355712);//TODO breeding
 
 		if(inputTextField.getVisible())

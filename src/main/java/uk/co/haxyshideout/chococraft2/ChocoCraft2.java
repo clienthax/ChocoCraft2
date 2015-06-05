@@ -31,7 +31,6 @@ public class ChocoCraft2 {
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
 
-	finish up chocopedia gui buttons (follow etc)
 	optimizations:
 	condense booleans in datawatcher.
 	move out any reusable functions to haxylib
