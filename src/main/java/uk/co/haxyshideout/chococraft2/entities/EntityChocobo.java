@@ -40,6 +40,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	private ChocoboAIAvoidPlayer chocoboAIAvoidPlayer;
 	private ChocoboAIHealInPen chocoboAIHealInPen;
 	private AnimalChest chocoboChest;
+	private int timeUntilNextFeatherDrop;
 
 	public enum ChocoboColor
 	{
@@ -71,8 +72,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);//set max health to 30
 		setHealth(getMaxHealth());//reset the hp to max
+		resetFeatherDropTime();
 
-		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
+		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
 		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
@@ -105,7 +107,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		super.onLivingUpdate();
 
 		//Wing rotations, client side
-		if(worldObj.isRemote) {//Client side..
+		if(worldObj.isRemote) {//Client side
 			this.destPos += (double)(this.onGround ? -1 : 4) * 0.3D;
 			this.destPos = MathHelper.clamp_float(destPos, 0f, 1f);
 
@@ -121,8 +123,21 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 				this.motionY *= 0.8D;
 			}
 			this.wingRotation += this.wingRotDelta * 2.0F;
+
+			return;//Rest of code should be run on server only
 		}
 
+		//Drop a chocobo feather randomly
+		if(--timeUntilNextFeatherDrop <= 0) {//TODO config
+			if(RandomHelper.getChanceResult(80))
+				entityDropItem(new ItemStack(Additions.chocoboFeatherItem), 0);
+			resetFeatherDropTime();
+		}
+
+	}
+
+	public void resetFeatherDropTime() {
+		timeUntilNextFeatherDrop = rand.nextInt(500);//TODO config
 	}
 
 	/*
@@ -377,6 +392,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	{
 		super.onDeath(cause);
 		dropGear(null);
+		for(int i = 0; i < rand.nextInt(3); i++)
+			entityDropItem(new ItemStack(Additions.chocoboFeatherItem), 0);
 	}
 
 	//Inv stuff

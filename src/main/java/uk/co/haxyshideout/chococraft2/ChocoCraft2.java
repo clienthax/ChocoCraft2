@@ -30,7 +30,6 @@ public class ChocoCraft2 {
 	whole config system - use configurate, is awesome. as forges config system sucks.
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
-	chocobos need to drop feathers occasionally
 
 	finish up chocopedia gui buttons (follow etc)
 	optimizations:
