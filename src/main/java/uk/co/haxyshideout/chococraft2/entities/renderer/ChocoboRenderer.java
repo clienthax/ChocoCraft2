@@ -1,6 +1,7 @@
 package uk.co.haxyshideout.chococraft2.entities.renderer;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -30,6 +31,10 @@ public class ChocoboRenderer extends RenderLiving {
 		return (MathHelper.sin(entityChocobo.wingRotation) + 1F) * entityChocobo.destPos;
 	}
 
+	@Override
+	protected void preRenderCallback(EntityLivingBase entityliving, float f) {//TODO big hack because the model is positioned wrong
+		GlStateManager.translate(-0.075, 0, -0.45);
+	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {

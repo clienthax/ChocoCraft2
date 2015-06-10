@@ -1,6 +1,7 @@
 package uk.co.haxyshideout.chococraft2.entities.models;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -70,7 +71,7 @@ public class ModelChocobo extends ModelBase
 		neck.mirror = true;
 		setRotation(neck, 0F, 0F, 0F);
 
-		feather.addBox(-3F, -12F, 3F, 6, 1, 5);
+		feather.addBox(-3F, -11.5F, 3F, 6, 1, 5);
 		feather.setRotationPoint(1F, -8F, -5F);
 		feather.setTextureSize(textureWidth, textureHeight);
 		feather.mirror = true;
