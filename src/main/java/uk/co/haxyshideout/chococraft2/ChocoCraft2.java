@@ -30,6 +30,7 @@ public class ChocoCraft2 {
 	whole config system - use configurate, is awesome. as forges config system sucks.
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
+	swords dont break greens
 
 	optimizations:
 	condense booleans in datawatcher.
@@ -38,8 +39,14 @@ public class ChocoCraft2 {
 	additions:
 	dyable collars! - going to need to get that bloody image generator working for this stuff..
 	implement chocobo whistle, should tp the last chocobo you rode to you aslong as you are in the same world ( spawn near the player?)
+	incubator
+	chocobos should run when they hear another chocobo being hurt
 
 	implement our own spawn eggs for all chocobos (a wrapper should be good enough)
+
+	new mechanics:
+	chocobos should lay eggs on straw that the player can pickup (block)
+
 
 
 	 */

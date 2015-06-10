@@ -1,9 +1,5 @@
 package uk.co.haxyshideout.haxylib.utils;
 
-import net.minecraft.util.EnumChatFormatting;
-
-import java.util.regex.Pattern;
-
 /**
  * Created by clienthax on 5/6/2015.
  */

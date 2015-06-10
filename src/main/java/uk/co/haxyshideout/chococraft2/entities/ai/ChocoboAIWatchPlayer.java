@@ -87,7 +87,7 @@ public class ChocoboAIWatchPlayer extends EntityAIBase
 	@Override
 	public void updateTask()
 	{
-		this.theWatcher.getLookHelper().setLookPosition(this.closestEntity.posX, this.closestEntity.posY + (double)this.closestEntity.getEyeHeight(), this.closestEntity.posZ, 10.0F, (float)this.theWatcher.getVerticalFaceSpeed());
+		this.theWatcher.getLookHelper().setLookPosition(this.closestEntity.posX, this.closestEntity.posY + (double)this.closestEntity.getEyeHeight()-5, this.closestEntity.posZ, 10.0F, (float)this.theWatcher.getVerticalFaceSpeed());
 		--this.lookTime;
 	}
 }
