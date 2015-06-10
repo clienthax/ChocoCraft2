@@ -17,19 +17,16 @@ import java.util.UUID;
  */
 public class RiderStateUpdatePacket implements IMessage {
 
-	UUID entityID;
 	RiderState riderState;
 
 	public RiderStateUpdatePacket() {}
 
 	public RiderStateUpdatePacket(EntityChocobo riddenEntity) {//TODO make interface for controllable entities for haxylib, edit this to take that interface etc
-		entityID = riddenEntity.getUniqueID();
 		riderState = riddenEntity.getRiderState();
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		entityID = UUID.fromString(ByteBufUtils.readUTF8String(buf));
 		riderState = new RiderState();
 		riderState.setJumping(buf.readBoolean());
 		riderState.setSneaking(buf.readBoolean());
@@ -37,7 +34,6 @@ public class RiderStateUpdatePacket implements IMessage {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, entityID.toString());
 		buf.writeBoolean(riderState.isJumping());
 		buf.writeBoolean(riderState.isSneaking());
 	}
@@ -45,7 +41,7 @@ public class RiderStateUpdatePacket implements IMessage {
 	public static class Handler implements IMessageHandler<RiderStateUpdatePacket, IMessage> {
 		@Override
 		public IMessage onMessage(RiderStateUpdatePacket message, MessageContext ctx) {
-			Entity entity = MinecraftServer.getServer().getEntityFromUuid(message.entityID);
+			Entity entity = ctx.getServerHandler().playerEntity.ridingEntity;
 			if(!(entity instanceof EntityChocobo))
 				return null;
 
