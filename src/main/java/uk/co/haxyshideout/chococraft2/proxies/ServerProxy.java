@@ -1,5 +1,6 @@
 package uk.co.haxyshideout.chococraft2.proxies;
 
+import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import uk.co.haxyshideout.chococraft2.ChocoCraft2;
@@ -26,4 +27,9 @@ public class ServerProxy {
 	public void openChocopedia(EntityChocobo chocobo) {
 
 	}
+
+	public void updateRiderState(Entity rider) {
+
+	}
+
 }
