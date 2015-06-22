@@ -101,7 +101,7 @@ public class EventHandler {
 		spawnTimer = 0;
 
 		for(EntityPlayerMP playerMP : (List<EntityPlayerMP>)MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-			ChocoboSpawner.doChocoboSpawning(playerMP.worldObj, playerMP.getPosition());
+			//ChocoboSpawner.doChocoboSpawning(playerMP.worldObj, playerMP.getPosition());
 		}
 
 	}
