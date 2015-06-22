@@ -1,6 +1,7 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityTameable;
@@ -25,6 +26,7 @@ import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.ai.*;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
+import uk.co.haxyshideout.haxylib.utils.WorldHelper;
 
 import javax.annotation.Nullable;
 
@@ -41,6 +43,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	private ChocoboAIHealInPen chocoboAIHealInPen;
 	private AnimalChest chocoboChest;
 	private int timeUntilNextFeatherDrop;
+	private final RiderState riderState;
+	ChocoboAbilityInfo abilityInfo;//This is only initalised on the server.
 
 	public enum ChocoboColor
 	{
@@ -70,17 +74,87 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		this.setSize(1.3f, 2.3f);
 		setMale(world.rand.nextBoolean());
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
-		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);//set max health to 30
-		setHealth(getMaxHealth());//reset the hp to max
 		resetFeatherDropTime();
+		riderState = new RiderState();
 
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
-		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
-		this.tasks.addTask(0, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
-		this.tasks.addTask(0, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
-		this.tasks.addTask(0, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
+		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
+		this.tasks.addTask(1, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
+		this.tasks.addTask(1, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
 
 		initChest();
+
+		//Default init
+		if(!world.isRemote) {
+			if (WorldHelper.isHellWorld(world))
+				setColor(ChocoboColor.PURPLE);
+			else
+				setColor(ChocoboColor.YELLOW);
+		}
+	}
+
+	public void setStats() {
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(abilityInfo.getMaxHP());//set max health to 30
+		setHealth(getMaxHealth());//reset the hp to max
+		onGroundSpeedFactor = abilityInfo.getLandSpeed() / 100f;
+
+	}
+
+	public RiderState getRiderState() {
+		return riderState;
+	}
+
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {//TODO some point in future, move this to its own ai class
+		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase)
+		{
+			this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
+			this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
+			this.setRotation(this.rotationYaw, this.rotationPitch);
+			this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
+			strafe = ((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F;
+			forward = ((EntityLivingBase)this.riddenByEntity).moveForward;
+
+			if (forward <= 0.0F)
+			{
+				forward *= 0.25F;
+			}
+
+			if (!this.worldObj.isRemote)
+			{
+				this.stepHeight = abilityInfo.getStepHeight(true);
+				stepHeight = 0.5f;
+				this.jumpMovementFactor = abilityInfo.getAirSpeed() / 100f;
+				if(riderState.isJumping()) {
+					if(!onGround && abilityInfo.getCanFly()) {
+						motionY += jumpMovementFactor;
+						System.out.println("adding fly jump");
+					} else if(onGround && !abilityInfo.getCanFly()) {//If the chocobo can't fly
+						motionY += 1.0f;
+					}
+
+				}//need to check that iarborne is checked against canfly etc
+
+				this.setAIMoveSpeed((float)this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+				super.moveEntityWithHeading(strafe, forward);
+			}
+
+			this.prevLimbSwingAmount = this.limbSwingAmount;
+			double d1 = this.posX - this.prevPosX;
+			double d0 = this.posZ - this.prevPosZ;
+			float f4 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+
+			if (f4 > 1.0F)
+			{
+				f4 = 1.0F;
+			}
+
+			this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
+			this.limbSwing += this.limbSwingAmount;
+		}
+		else
+			super.moveEntityWithHeading(strafe, forward);
 	}
 
 	@Override
@@ -106,8 +180,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
-		//Wing rotations, client side
+		//Wing rotations, control packet, client side
 		if(worldObj.isRemote) {//Client side
+
+			if(riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
+				ChocoCraft2.proxy.updateRiderState(riddenByEntity);
+
 			this.destPos += (double)(this.onGround ? -1 : 4) * 0.3D;
 			this.destPos = MathHelper.clamp_float(destPos, 0f, 1f);
 
@@ -133,6 +211,14 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 				entityDropItem(new ItemStack(Additions.chocoboFeatherItem), 0);
 			resetFeatherDropTime();
 		}
+
+		if(riddenByEntity != null) {//TODO is this needed?
+			rotationPitch = 0;
+			rotationYaw = riddenByEntity.rotationYaw;
+			prevRotationYaw = riddenByEntity.rotationYaw;
+			setRotation(rotationYaw, rotationPitch);
+		}
+
 
 	}
 
@@ -214,6 +300,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 
 	public void setColor(ChocoboColor color) {
 		dataWatcher.updateObject(Constants.dataWatcherVariant, (byte)color.ordinal());
+		abilityInfo = ChocoboAbilityInfo.getAbilityInfo(color);
+		setStats();
 	}
 
 	public ChocoboColor getChocoboColor() {
@@ -288,12 +376,31 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		((WorldServer)worldObj).spawnParticle(EnumParticleTypes.HEART, false, posX, posY + 2.5, posZ, 3, 0.3d, 0, 0.3d, 1);
 	}
 
+	@Override
+	public double getMountedYOffset()
+	{
+		return 1.65D;
+	}
+
+	@Override
+	public boolean shouldRiderFaceForward(EntityPlayer player) {
+		return true;
+	}
+
 	/**
 	 * Get number of ticks, at least during which the living entity will be silent.
 	 */
 	@Override
 	public int getTalkInterval() {
 		return 150;
+	}
+
+	/**
+	 * Only show the name tag if the chocobo is tamed and not being ridden
+	 */
+	@Override
+	public boolean getAlwaysRenderNameTagForRender() {//TODO why the heck doesnt this work..
+		return isTamed() && riddenByEntity == null;
 	}
 
 	@Override
@@ -384,7 +491,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	@Override
 	protected boolean isMovementBlocked()
 	{
-		return this.riddenByEntity != null || getMovementType() == MovementType.STANDSTILL;
+		return getMovementType() == MovementType.STANDSTILL && riddenByEntity == null;
 	}
 
 	@Override
@@ -453,7 +560,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 			if(player != null)
 				InventoryHelper.giveOrDropStack(new ItemStack(Additions.chocoboSaddleItem), player);
 			else
-				entityDropItem(new ItemStack(Additions.chocoboSaddleBagItem), 0);
+				entityDropItem(new ItemStack(Additions.chocoboSaddleItem), 0);
 		}
 		if(getBagType() == EntityChocobo.BagType.SADDLE) {
 			setBag(EntityChocobo.BagType.NONE);

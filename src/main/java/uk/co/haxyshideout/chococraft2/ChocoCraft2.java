@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import uk.co.haxyshideout.chococraft2.commands.DebugCommand;
 import uk.co.haxyshideout.chococraft2.config.Additions;
+import uk.co.haxyshideout.chococraft2.config.ChococraftConfig;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.config.RecipeHandler;
 import uk.co.haxyshideout.chococraft2.events.EventHandler;
@@ -31,6 +32,7 @@ public class ChocoCraft2 {
 	chocobos to be ridden properly
 	chocobos seem to go invisible if you walk to close to them
 	swords dont break greens
+	set eye height of chocobo
 
 	optimizations:
 	condense booleans in datawatcher.
@@ -41,6 +43,7 @@ public class ChocoCraft2 {
 	implement chocobo whistle, should tp the last chocobo you rode to you aslong as you are in the same world ( spawn near the player?)
 	incubator
 	chocobos should run when they hear another chocobo being hurt
+	trusted riders
 
 	implement our own spawn eggs for all chocobos (a wrapper should be good enough)
 
@@ -56,6 +59,8 @@ public class ChocoCraft2 {
 
 	@Mod.Instance(value = Constants.MODID)
 	public static ChocoCraft2 instance;
+
+	private ChococraftConfig chococraftConfig = new ChococraftConfig();
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {
