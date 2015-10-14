@@ -136,6 +136,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 			if (this.riderState.isJumping() && this.getAbilityInfo().getCanFly())
 			{
+				this.isJumping = true;
 				this.jump();
 			}
 
@@ -191,6 +192,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
+
+		this.fallDistance = 0f;
 		
 		// Wing rotations, control packet, client side
 		if (worldObj.isRemote)
@@ -198,11 +201,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			// Client side
 			if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
 			{
-				if(Minecraft.getMinecraft().thePlayer.getUniqueID().equals(riddenByEntity.getUniqueID()) && Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+				if (Minecraft.getMinecraft().thePlayer.getUniqueID().equals(riddenByEntity.getUniqueID()) && Keyboard.isKeyDown(Keyboard.KEY_SPACE))
 				{
 					this.riderState.setJumping(true);
 				}
-				
+
 				ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 			}
 
