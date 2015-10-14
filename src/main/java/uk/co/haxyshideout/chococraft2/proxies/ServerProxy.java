@@ -14,26 +14,29 @@ import uk.co.haxyshideout.chococraft2.worldgen.GysahlGen;
  */
 public class ServerProxy {
 
-	public void registerRenderers(){}
+    public void registerRenderers() {
+    }
 
-	@SuppressWarnings("UnusedAssignment")
-	public void registerEntities() {
-		int entityId = 0;
-		EntityRegistry.registerModEntity(EntityChocobo.class, "chocobo", entityId++, ChocoCraft2.instance, 64, 1, true);
-		EntityRegistry.addSpawn(EntityChocobo.class, 2, 1, 5, EnumCreatureType.AMBIENT, BiomeGenBase.forest);
-		EntityRegistry.addSpawn(EntityChocobo.class, 2, 1, 3, EnumCreatureType.AMBIENT, BiomeGenBase.hell);
-	}
+    @SuppressWarnings("UnusedAssignment")
+    public void registerEntities() {
+        int entityId = 0;
+        EntityRegistry.registerModEntity(EntityChocobo.class, "chocobo", entityId++, ChocoCraft2.instance, 64, 1, true);
+        EntityRegistry.addSpawn(EntityChocobo.class, 2, 1, 5, EnumCreatureType.AMBIENT, BiomeGenBase.forest);
+        EntityRegistry.addSpawn(EntityChocobo.class, 2, 1, 3, EnumCreatureType.AMBIENT, BiomeGenBase.hell);
+    }
 
-	public void registerWorldGenerators() {
-		GameRegistry.registerWorldGenerator(new GysahlGen(), 1);//TODO config option for weight
-	}
+    public void registerWorldGenerators() {
+        GameRegistry.registerWorldGenerator(new GysahlGen(), 1);// TODO config
+                                                                // option for
+                                                                // weight
+    }
 
-	public void openChocopedia(EntityChocobo chocobo) {
+    public void openChocopedia(EntityChocobo chocobo) {
 
-	}
+    }
 
-	public void updateRiderState(Entity rider) {
+    public void updateRiderState(Entity rider) {
 
-	}
+    }
 
 }

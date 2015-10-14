@@ -76,7 +76,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		resetFeatherDropTime();
 		riderState = new RiderState();
-
+		
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));//follow speed 1, min and max 5
@@ -179,7 +179,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-
 		//Wing rotations, control packet, client side
 		if(worldObj.isRemote) {//Client side
 

@@ -1,6 +1,9 @@
-build
-.gradle
-run
-.idea
-*.iml
-tools/Output
+*
+!src/
+!.gitignore
+!gradlew*
+!gradle/
+!LICENSE.txt
+!README.md
+!COPYING.lesser
+!build.gradle

@@ -1,11 +1,9 @@
 package uk.co.haxyshideout.chococraft2.commands;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.DefaultNames;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
