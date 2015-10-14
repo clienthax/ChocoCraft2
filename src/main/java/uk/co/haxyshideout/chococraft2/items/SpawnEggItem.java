@@ -29,12 +29,10 @@ public class SpawnEggItem extends GenericItem {
             itemstack.stackSize--;
 
         if (!player.worldObj.isRemote && !player.capabilities.isFlying) {
-            System.out.println("Started.");
             player.worldObj.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4f + 0.8f));
             EntityChocobo entity = new EntityChocobo(player.worldObj);
             entity.setColor(mobColor);
             entity.setLocationAndAngles(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
-            System.out.println("Created Purple Entity.");
             player.worldObj.spawnEntityInWorld(entity);
         }
 
