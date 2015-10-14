@@ -83,8 +83,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		resetFeatherDropTime();
 		riderState = new RiderState();
-		this.stepHeight = 1.0F;
-
+		
+		if(this.getAbilityInfo().canClimb())
+		{
+			this.stepHeight = 1.0F;
+		}
+		
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
@@ -138,6 +142,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			{
 				this.isJumping = true;
 				this.jump();
+			}
+			else if (this.riderState.isJumping() && !this.isAirBorne)
+			{
+				this.motionY += 0.5;
+				this.riderState.setJumping(false);
+				this.isJumping = true;
 			}
 
 			if (!this.worldObj.isRemote)
