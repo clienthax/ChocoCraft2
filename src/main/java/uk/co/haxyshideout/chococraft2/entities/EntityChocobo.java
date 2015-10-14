@@ -120,7 +120,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health to 30
 		setHealth(getMaxHealth());// reset the hp to max
 		onGroundSpeedFactor = this.getAbilityInfo().getLandSpeed() / 100f;
-
 	}
 
 	public RiderState getRiderState()
@@ -228,9 +227,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				{
 					this.riderState.setJumping(true);
 				}
-
-				ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 			}
+
+			ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 
 			this.destPos += (double) (this.onGround ? -1 : 4) * 0.3D;
 			this.destPos = MathHelper.clamp_float(destPos, 0f, 1f);
