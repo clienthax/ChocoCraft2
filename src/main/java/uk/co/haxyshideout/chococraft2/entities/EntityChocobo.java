@@ -1,9 +1,7 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import net.minecraft.entity.Entity;
-
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,6 +22,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import org.lwjgl.input.Keyboard;
 import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
@@ -416,7 +415,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable)
 	{
-		return null;
+		EntityChocobo.ChocoboColor chocoboColor = WorldHelper.isHellWorld(ageable.worldObj) ? EntityChocobo.ChocoboColor.PURPLE : EntityChocobo.ChocoboColor.YELLOW;
+		return new EntityBabyChocobo(ageable.worldObj, chocoboColor);
 	}
 
 	@Override
