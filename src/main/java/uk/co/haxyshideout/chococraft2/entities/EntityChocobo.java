@@ -1,8 +1,7 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
 import net.minecraft.client.Minecraft;
-
-import org.lwjgl.input.Keyboard;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,6 +22,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import org.lwjgl.input.Keyboard;
 import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
@@ -83,12 +83,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		resetFeatherDropTime();
 		riderState = new RiderState();
-		
-		if(this.getAbilityInfo().canClimb())
-		{
-			this.stepHeight = 1.0F;
-		}
-		
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
@@ -107,6 +101,20 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 	}
 
+	@Override
+	public void mountEntity(Entity entityIn)
+    {
+		super.mountEntity(entityIn);
+		
+		if(this.worldObj.isRemote)
+		{
+			if(Minecraft.getMinecraft().thePlayer.getUniqueID().equals(entityIn.getUniqueID()))
+			{
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
+			}
+		}
+    }
+	
 	public void setStats()
 	{
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health to 30
@@ -143,9 +151,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				this.isJumping = true;
 				this.jump();
 			}
-			else if (this.riderState.isJumping() && !this.isAirBorne)
+			else if (this.riderState.isJumping() && !this.isJumping && this.onGround)
 			{
-				this.motionY += 0.5;
+				this.motionY += 0.75;
 				this.riderState.setJumping(false);
 				this.isJumping = true;
 			}
@@ -203,6 +211,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		super.onLivingUpdate();
 
+		if(this.getAbilityInfo().canClimb())
+		{
+			this.stepHeight = 1.0F;
+		}
+		
 		this.fallDistance = 0f;
 		
 		// Wing rotations, control packet, client side
@@ -402,7 +415,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable)
 	{
-		return null;
+		EntityBabyChocobo entity = new EntityBabyChocobo(ageable.worldObj, this.getChocoboColor());
+		this.worldObj.spawnEntityInWorld(entity);
+		entity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+		
+		return entity;
 	}
 
 	@Override
@@ -466,7 +483,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public boolean interact(EntityPlayer player)
 	{
-
 		if (!worldObj.isRemote)
 			if (player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player)
 			{
@@ -505,6 +521,10 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				heal(RandomHelper.getRandomInt(5));
 			}
 			return true;
+		}
+		else if(player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
+		{
+			this.createChild(this);
 		}
 
 		/*
