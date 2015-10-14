@@ -26,6 +26,7 @@ item.chocoDisguiseLegs.name=Chocodisguise Legs
 item.chocoDisguiseBoots.name=Chocodisguise Boots
 itemGroup.Chococraft2=ChocoCraft 2
 entity.chocobo.name=Chocobo
+entity.babychocobo.name=Baby Chocobo
 
 item.purpleSpawnEggItem.name=Purple Chocobo Egg
 item.yellowSpawnEggItem.name=Yellow Chocobo Egg
