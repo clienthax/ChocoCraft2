@@ -1,8 +1,5 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
