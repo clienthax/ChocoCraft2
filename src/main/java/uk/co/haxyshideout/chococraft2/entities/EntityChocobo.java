@@ -1,7 +1,8 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 
+import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -83,12 +84,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		resetFeatherDropTime();
 		riderState = new RiderState();
-		
-		if(this.getAbilityInfo().canClimb())
-		{
-			this.stepHeight = 1.0F;
-		}
-		
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
@@ -107,6 +102,20 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 	}
 
+	@Override
+	public void mountEntity(Entity entityIn)
+    {
+		super.mountEntity(entityIn);
+		
+		if(this.worldObj.isRemote)
+		{
+			if(Minecraft.getMinecraft().thePlayer.getUniqueID().equals(entityIn.getUniqueID()))
+			{
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
+			}
+		}
+    }
+	
 	public void setStats()
 	{
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health to 30
@@ -143,9 +152,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				this.isJumping = true;
 				this.jump();
 			}
-			else if (this.riderState.isJumping() && !this.isAirBorne)
+			else if (this.riderState.isJumping() && !this.isJumping && this.onGround)
 			{
-				this.motionY += 0.5;
+				this.motionY += 0.75;
 				this.riderState.setJumping(false);
 				this.isJumping = true;
 			}
@@ -203,6 +212,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		super.onLivingUpdate();
 
+		if(this.getAbilityInfo().canClimb())
+		{
+			this.stepHeight = 1.0F;
+		}
+		
 		this.fallDistance = 0f;
 		
 		// Wing rotations, control packet, client side
