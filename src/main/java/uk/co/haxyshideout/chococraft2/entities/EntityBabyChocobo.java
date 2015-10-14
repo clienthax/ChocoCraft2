@@ -21,7 +21,7 @@ public class EntityBabyChocobo extends EntityAnimal
 	public EntityBabyChocobo(World worldIn)
 	{
 		super(worldIn);
-		
+		this.setSize(0.5f, 0.5f);
 		this.tasks.addTask(2, new EntityAIWander(this, this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue()));
 		this.tasks.addTask(3, new EntityAISwimming(this));
 		this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));

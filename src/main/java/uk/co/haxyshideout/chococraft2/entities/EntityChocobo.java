@@ -227,9 +227,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				{
 					this.riderState.setJumping(true);
 				}
+				
+				ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 			}
-
-			ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 
 			this.destPos += (double) (this.onGround ? -1 : 4) * 0.3D;
 			this.destPos = MathHelper.clamp_float(destPos, 0f, 1f);
