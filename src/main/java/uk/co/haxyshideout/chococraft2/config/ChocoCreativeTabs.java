@@ -9,9 +9,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by clienthax on 12/4/2015.
  */
 public class ChocoCreativeTabs {
-	public static final CreativeTabs chococraft2 = new CreativeTabs("Chococraft2"){
-		@Override
-		@SideOnly(Side.CLIENT)
-		public Item getTabIconItem() {return Additions.gysahlGreenItem;}
-	};
+
+    public static final CreativeTabs chococraft2 = new CreativeTabs("Chococraft2") {
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public Item getTabIconItem() {
+            return Additions.gysahlGreenItem;
+        }
+    };
 }
