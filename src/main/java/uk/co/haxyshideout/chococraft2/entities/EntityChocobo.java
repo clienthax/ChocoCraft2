@@ -1,5 +1,8 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
+import net.minecraft.client.Minecraft;
+
+import org.lwjgl.input.Keyboard;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -48,7 +51,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	private AnimalChest chocoboChest;
 	private int timeUntilNextFeatherDrop;
 	private final RiderState riderState;
-	ChocoboAbilityInfo abilityInfo;// This is only initalised on the server.
 
 	public enum ChocoboColor
 	{
@@ -82,6 +84,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		resetFeatherDropTime();
 		riderState = new RiderState();
 		this.stepHeight = 1.0F;
+
 		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
@@ -102,9 +105,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	public void setStats()
 	{
-		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(abilityInfo.getMaxHP());// set max health to 30
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health to 30
 		setHealth(getMaxHealth());// reset the hp to max
-		onGroundSpeedFactor = abilityInfo.getLandSpeed() / 100f;
+		onGroundSpeedFactor = this.getAbilityInfo().getLandSpeed() / 100f;
 
 	}
 
@@ -129,6 +132,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			if (forward <= 0.0F)
 			{
 				forward *= 0.25F;
+			}
+
+			if (this.riderState.isJumping() && this.getAbilityInfo().getCanFly())
+			{
+				this.jump();
 			}
 
 			if (!this.worldObj.isRemote)
@@ -183,13 +191,19 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
+		
 		// Wing rotations, control packet, client side
 		if (worldObj.isRemote)
-		{// Client side
-
+		{
+			// Client side
 			if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
 			{
-				ChocoCraft2.proxy.updateRiderState(riddenByEntity);
+				if(Minecraft.getMinecraft().thePlayer.getUniqueID().equals(riddenByEntity.getUniqueID()) && Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+				{
+					this.riderState.setJumping(true);
+				}
+				
+				ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
 			}
 
 			this.destPos += (double) (this.onGround ? -1 : 4) * 0.3D;
@@ -199,7 +213,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			{
 				this.wingRotDelta = Math.min(wingRotation, 1f);
 			}
-			
+
 			this.wingRotDelta *= 0.9D;
 
 			if (!this.onGround && this.motionY < 0.0D)
@@ -319,7 +333,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	public void setColor(ChocoboColor color)
 	{
 		dataWatcher.updateObject(Constants.dataWatcherVariant, (byte) color.ordinal());
-		abilityInfo = ChocoboAbilityInfo.getAbilityInfo(color);
 		setStats();
 	}
 
@@ -433,8 +446,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	 */
 	@Override
 	public boolean getAlwaysRenderNameTagForRender()
-	{// TODO why the heck doesnt this work..
-		return isTamed() && riddenByEntity == null;
+	{
+		return (isTamed() && riddenByEntity == null);
 	}
 
 	@Override
@@ -638,4 +651,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 	}
 
+	public ChocoboAbilityInfo getAbilityInfo()
+	{
+		return ChocoboAbilityInfo.getAbilityInfo(this.getChocoboColor());
+	}
 }
