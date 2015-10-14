@@ -35,7 +35,6 @@ public class RegistryHelper {
                 } else if (field.get(null) instanceof Item) {
                     Item item = (Item) field.get(null);
                     GameRegistry.registerItem(item, item.getUnlocalizedName());
-                    System.out.println("registered " + item.getUnlocalizedName());
                     JsonGenerator.generateSimpleItemJson(item.getUnlocalizedName(), item instanceof ItemBlock, item);
 
                 }

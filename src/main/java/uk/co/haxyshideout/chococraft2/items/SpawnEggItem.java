@@ -28,7 +28,7 @@ public class SpawnEggItem extends GenericItem {
         if (!player.capabilities.isCreativeMode)
             itemstack.stackSize--;
 
-        if (!player.worldObj.isRemote) {
+        if (!player.worldObj.isRemote && !player.capabilities.isFlying) {
             System.out.println("Started.");
             player.worldObj.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4f + 0.8f));
             EntityChocobo entity = new EntityChocobo(player.worldObj);

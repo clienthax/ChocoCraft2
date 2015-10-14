@@ -16,7 +16,6 @@ item.chocoboFeatherItem.name=Chocobo Feather
 item.chocoboLegRawItem.name=Raw Chocobo Leg
 item.chocoboLegCookedItem.name=Cooked Chocobo Leg
 item.chocopediaItem.name=Chocopedia
-item.purpleSpawnEggItem.name=Purple Chocobo Egg
 item.chocoboSaddleItem.name=Chocobo Saddle
 item.chocoboSaddleBagItem.name=Chocobo Saddle Bag
 item.chocoboPackBagItem.name=Chocobo Pack Bag
@@ -25,7 +24,16 @@ item.chocoDisguiseHelm.name=Chocodisguise Helmet
 item.chocoDisguiseChest.name=Chocodisguise Body
 item.chocoDisguiseLegs.name=Chocodisguise Legs
 item.chocoDisguiseBoots.name=Chocodisguise Boots
-
 itemGroup.Chococraft2=ChocoCraft 2
-
 entity.chocobo.name=Chocobo
+
+item.purpleSpawnEggItem.name=Purple Chocobo Egg
+item.yellowSpawnEggItem.name=Yellow Chocobo Egg
+item.greenSpawnEggItem.name=Green Chocobo Egg
+item.blueSpawnEggItem.name=Blue Chocobo Egg
+item.whiteSpawnEggItem.name=White Chocobo Egg
+item.blackSpawnEggItem.name=Black Chocobo Egg
+item.goldSpawnEggItem.name=Gold Chocobo Egg
+item.pinkSpawnEggItem.name=Pink Chocobo Egg
+item.redSpawnEggItem.name=Red Chocobo Egg
+
