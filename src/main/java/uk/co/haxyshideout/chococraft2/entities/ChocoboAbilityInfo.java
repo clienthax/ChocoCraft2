@@ -42,24 +42,44 @@ public class ChocoboAbilityInfo {
 		return this;
 	}
 
-	public ChocoboAbilityInfo setCanClimb() {
-		this.canClimb = true;
+	public ChocoboAbilityInfo setCanClimb(boolean value) {
+		this.canClimb = value;
 		return this;
 	}
-
-	public ChocoboAbilityInfo setCanWalkOnWater() {
-		this.canWalkOnWater = true;
-		return this;
+	
+	public boolean canClimb()
+	{
+		return this.canClimb;
 	}
 
-	public ChocoboAbilityInfo setCanFly() {
-		this.canFly = true;
+	public ChocoboAbilityInfo setCanWalkOnWater(boolean value) {
+		this.canWalkOnWater = value;
 		return this;
 	}
+	
+	public boolean canWalkOnWater()
+	{
+		return this.canWalkOnWater;
+	}
 
-	public ChocoboAbilityInfo setImmuneToFire() {
-		this.immuneToFire = true;
+	public ChocoboAbilityInfo setCanFly(boolean value) {
+		this.canFly = value;
 		return this;
+	}
+	
+	public boolean canFly()
+	{
+		return this.canFly;
+	}
+
+	public ChocoboAbilityInfo setImmuneToFire(boolean value) {
+		this.immuneToFire = value;
+		return this;
+	}
+	
+	public boolean isImmuneToFire()
+	{
+		return this.immuneToFire;
 	}
 
 	public ChocoboAbilityInfo setSpeeds(float landSpeed, float waterSpeed, float airbornSpeed) {
@@ -68,6 +88,21 @@ public class ChocoboAbilityInfo {
 		this.airbornSpeed = airbornSpeed;
 		return this;
 	}
+	
+	public float getLandSpeed()
+	{
+		return this.landSpeed;
+	}
+	
+	public float getWaterSpeed()
+	{
+		return this.waterSpeed;
+	}
+	
+	public float getAirbornSpeed()
+	{
+		return this.airbornSpeed;
+	}
 
 	public ChocoboAbilityInfo setStepHeight(float mountedStepHeight, float normalStepHeight) {
 		this.mountedStepHeight = mountedStepHeight;
@@ -75,6 +110,17 @@ public class ChocoboAbilityInfo {
 		return this;
 	}
 
+	public ChocoboAbilityInfo setAirSpeed(float speed)
+	{
+		this.airSpeed = speed;
+		return this;
+	}
+	
+	public float getAirSpeed()
+	{
+		return this.airSpeed;
+	}
+	
 	public ChocoboAbilityInfo setRiderAbilities(List<PotionEffect> effectList) {
 		this.effectList = effectList;
 		return this;
@@ -91,14 +137,6 @@ public class ChocoboAbilityInfo {
 
 	public int getMaxHP() {
 		return maxHP;
-	}
-
-	public float getLandSpeed() {
-		return landSpeed;
-	}
-
-	public float getAirSpeed() {
-		return airSpeed;
 	}
 
 	public float getStepHeight(boolean mounted) {
