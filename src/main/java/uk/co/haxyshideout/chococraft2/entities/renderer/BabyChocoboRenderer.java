@@ -19,6 +19,7 @@ public class BabyChocoboRenderer extends RenderLiving
 	public BabyChocoboRenderer(RenderManager rendermanagerIn, ModelBase modelbaseIn)
 	{
 		super(rendermanagerIn, modelbaseIn, 1.5f);
+		this.shadowSize = 0f;
 	}
 
 	@Override
