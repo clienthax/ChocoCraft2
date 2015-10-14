@@ -415,8 +415,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable)
 	{
-		EntityChocobo.ChocoboColor chocoboColor = WorldHelper.isHellWorld(ageable.worldObj) ? EntityChocobo.ChocoboColor.PURPLE : EntityChocobo.ChocoboColor.YELLOW;
-		return new EntityBabyChocobo(ageable.worldObj, chocoboColor);
+		EntityBabyChocobo entity = new EntityBabyChocobo(ageable.worldObj, this.getChocoboColor());
+		this.worldObj.spawnEntityInWorld(entity);
+		entity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+		
+		return entity;
 	}
 
 	@Override
@@ -480,7 +483,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public boolean interact(EntityPlayer player)
 	{
-
 		if (!worldObj.isRemote)
 			if (player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player)
 			{
@@ -519,6 +521,10 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				heal(RandomHelper.getRandomInt(5));
 			}
 			return true;
+		}
+		else if(player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
+		{
+			this.createChild(this);
 		}
 
 		/*
