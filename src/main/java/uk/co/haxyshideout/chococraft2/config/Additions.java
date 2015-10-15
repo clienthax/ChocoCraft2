@@ -66,7 +66,7 @@ public class Additions {
 
     // Register items and blocks etc in here
     public static void registerAdditions() {
-        gysahlStemBlock = new GysahlStemBlock().setUnlocalizedName("gysahlStemBlock");
+        gysahlStemBlock = new GysahlStemBlock().setUnlocalizedName("gysahlStemBlock").setCreativeTab(ChocoCreativeTabs.chococraft2);
         strawBlock = new StrawBlock().setUnlocalizedName("strawBlock").setCreativeTab(ChocoCreativeTabs.chococraft2);
 
         gysahlGreenItem = new GenericItem().setUnlocalizedName("gysahlGreenItem").setCreativeTab(ChocoCreativeTabs.chococraft2);

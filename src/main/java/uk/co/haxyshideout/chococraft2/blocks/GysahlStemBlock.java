@@ -1,7 +1,5 @@
 package uk.co.haxyshideout.chococraft2.blocks;
 
-import uk.co.haxyshideout.chococraft2.config.ChocoCreativeTabs;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.properties.PropertyInteger;
@@ -30,7 +28,6 @@ public class GysahlStemBlock extends GenericBush implements IGrowable {
 
 	public GysahlStemBlock() {
 		setTickRandomly(true);
-		this.setCreativeTab(ChocoCreativeTabs.chococraft2);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(STAGE, 0));
 		float f = 0.4F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f * 2.0F, 0.5F + f);
