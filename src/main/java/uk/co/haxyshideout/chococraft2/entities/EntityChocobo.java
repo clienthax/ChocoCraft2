@@ -208,6 +208,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	}
 
 	@Override
+	public boolean isBreedingItem(ItemStack itemStack) {
+		return itemStack.getItem() == Additions.gysahlLoverlyItem || itemStack.getItem() == Additions.gysahlGoldenItem;
+	}
+
+	@Override
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
