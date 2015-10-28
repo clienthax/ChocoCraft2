@@ -151,6 +151,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			{
 				this.isJumping = true;
 				this.jump();
+				moveFlying(strafe, forward, 100 / getAbilityInfo().getAirbornSpeed());
 			}
 			else if (this.riderState.isJumping() && !this.isJumping && this.onGround)
 			{
@@ -158,7 +159,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				this.riderState.setJumping(false);
 				this.isJumping = true;
 			}
-
 			if (!this.worldObj.isRemote)
 			{
 				this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
@@ -177,9 +177,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 			this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
 			this.limbSwing += this.limbSwingAmount;
-		}
-		else
+		} else {
 			super.moveEntityWithHeading(strafe, forward);
+		}
 	}
 
 	@Override

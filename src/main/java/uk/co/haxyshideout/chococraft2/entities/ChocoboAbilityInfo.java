@@ -109,17 +109,6 @@ public class ChocoboAbilityInfo {
 		this.normalStepHeight = normalStepHeight;
 		return this;
 	}
-
-	public ChocoboAbilityInfo setAirSpeed(float speed)
-	{
-		this.airSpeed = speed;
-		return this;
-	}
-	
-	public float getAirSpeed()
-	{
-		return this.airSpeed;
-	}
 	
 	public ChocoboAbilityInfo setRiderAbilities(List<PotionEffect> effectList) {
 		this.effectList = effectList;
