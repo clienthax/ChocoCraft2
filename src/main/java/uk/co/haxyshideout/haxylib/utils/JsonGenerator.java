@@ -15,13 +15,13 @@ public class JsonGenerator {
 
 	public static boolean devEnviroment = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-	static File libResourcesFolder = new File("./src/main/resources/assets/haxylib/json/");
+	static File libResourcesFolder = new File("../src/main/resources/assets/haxylib/json/");
 	static File modResourcesFolder = null;
 	static String modid = null;
 
 	public static void setModID(String modId) {
 		modid = modId;
-		modResourcesFolder = new File("./src/main/resources/assets/"+modId);
+		modResourcesFolder = new File("../src/main/resources/assets/"+modId);
 	}
 
 	public static void generateSimpleBlockJson(String blockName) throws IOException {//TODO generation for stuff with tile's and icons

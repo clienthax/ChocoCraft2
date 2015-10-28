@@ -99,6 +99,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			else
 				setColor(ChocoboColor.YELLOW);
 		}
+
+		this.isImmuneToFire = getAbilityInfo().isImmuneToFire();
 	}
 
 	@Override
