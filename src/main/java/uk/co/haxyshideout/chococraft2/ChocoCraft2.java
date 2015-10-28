@@ -27,10 +27,7 @@ public class ChocoCraft2 {
 	special ability code (possibly a extra handler for this), flying , falling damage, fire proof, speed etc
 	breeding!
 	achievements
-	purple egg needs to spawn the bloody chocobo
 	whole config system - use configurate, is awesome. as forges config system sucks.
-	chocobos to be ridden properly
-	chocobos seem to go invisible if you walk to close to them
 	swords dont break greens
 	set eye height of chocobo
 
@@ -44,9 +41,7 @@ public class ChocoCraft2 {
 	incubator
 	chocobos should run when they hear another chocobo being hurt
 	trusted riders
-
-	implement our own spawn eggs for all chocobos (a wrapper should be good enough)
-
+	
 	new mechanics:
 	chocobos should lay eggs on straw that the player can pickup (block)
 

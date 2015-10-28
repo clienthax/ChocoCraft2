@@ -18,6 +18,8 @@ import uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor;
 
 public class EntityBabyChocobo extends EntityAnimal
 {
+    private int ticksExisted;
+    
 	public EntityBabyChocobo(World worldIn)
 	{
 		super(worldIn);
@@ -30,6 +32,21 @@ public class EntityBabyChocobo extends EntityAnimal
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityMob.class, true));
 	}
 
+	public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+        this.ticksExisted++;
+        
+        if(this.ticksExisted >= 400 && !this.worldObj.isRemote)
+        {
+            this.setDead();
+            EntityChocobo chocobo = new EntityChocobo(this.worldObj);
+            chocobo.setColor(this.getChocoboColor());
+            chocobo.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            this.worldObj.spawnEntityInWorld(chocobo);
+        }
+    }
+	
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable)
 	{
