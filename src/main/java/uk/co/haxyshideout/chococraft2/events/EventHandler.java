@@ -3,19 +3,16 @@ package uk.co.haxyshideout.chococraft2.events;
 import com.google.common.io.CharSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreenBook;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -24,7 +21,6 @@ import org.apache.commons.io.IOUtils;
 import uk.co.haxyshideout.chococraft2.blocks.GysahlStemBlock;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
-import uk.co.haxyshideout.chococraft2.spawner.ChocoboSpawner;
 import uk.co.haxyshideout.haxylib.utils.FormattingHelper;
 
 import java.io.FileNotFoundException;
@@ -92,18 +88,6 @@ public class EventHandler {
 			((GysahlStemBlock) event.block.getBlock()).setGrowthStage(event.world, event.pos, event.block);
 		} else
 			event.setCanceled(true);
-	}
-
-	@SubscribeEvent
-	public void handleSpawning(TickEvent.WorldTickEvent event) {
-		if(spawnTimer++ < 50)//TODO could prob be neatened up by using the total world time and % tickdelay
-			return;
-		spawnTimer = 0;
-
-		for(EntityPlayerMP playerMP : (List<EntityPlayerMP>)MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-			//ChocoboSpawner.doChocoboSpawning(playerMP.worldObj, playerMP.getPosition());
-		}
-
 	}
 
 }
