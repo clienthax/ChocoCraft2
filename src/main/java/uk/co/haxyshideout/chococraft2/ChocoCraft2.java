@@ -23,7 +23,6 @@ import uk.co.haxyshideout.chococraft2.proxies.ServerProxy;
 public class ChocoCraft2 {
 	/*
 	TODO list
-	breeding - mostly done, just need to adjust times for growup + implement growing up by cake
 	achievements
 	whole config system - use configurate, is awesome. as forges config system sucks.
 	swords dont break greens

@@ -13,12 +13,14 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor;
 
 public class EntityBabyChocobo extends EntityAnimal
 {
     private int ticksExisted;
+	private final static int ticksToAdult = 27000;//TODO config
     
 	public EntityBabyChocobo(World worldIn)
 	{
@@ -37,15 +39,36 @@ public class EntityBabyChocobo extends EntityAnimal
         super.onLivingUpdate();
         this.ticksExisted++;
         
-        if(this.ticksExisted >= 400 && !this.worldObj.isRemote)
+        if(this.ticksExisted >= ticksToAdult && !this.worldObj.isRemote)
         {
-            this.setDead();
-            EntityChocobo chocobo = new EntityChocobo(this.worldObj);
-            chocobo.setColor(this.getChocoboColor());
-            chocobo.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            this.worldObj.spawnEntityInWorld(chocobo);
+	        growUp();
         }
     }
+
+	private void growUp() {
+		this.setDead();
+		EntityChocobo chocobo = new EntityChocobo(this.worldObj);
+		chocobo.setColor(this.getChocoboColor());
+		chocobo.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+		this.worldObj.spawnEntityInWorld(chocobo);
+	}
+
+	@Override
+	public boolean interact(EntityPlayer player)
+	{
+		if (worldObj.isRemote)// return if client
+			return false;
+
+		if (player.getHeldItem() == null)// Make sure the player is holding something for the following checks
+			return false;
+
+		if (player.getHeldItem().getItem() == Additions.gysahlCakeItem)
+		{
+			growUp();
+		}
+
+		return true;
+	}
 	
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable)
