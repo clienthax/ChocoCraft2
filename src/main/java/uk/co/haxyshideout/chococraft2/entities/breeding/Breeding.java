@@ -44,7 +44,7 @@ public class Breeding {
 					case PINK:
 					case RED:
 						if(bothParentsFedGold && randColour > 90) {
-							childColour = childColour.GOLD;
+							childColour = GOLD;
 						}
 						break;
 				}

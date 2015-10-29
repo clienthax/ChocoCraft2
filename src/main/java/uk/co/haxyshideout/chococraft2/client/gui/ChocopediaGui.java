@@ -2,16 +2,13 @@ package uk.co.haxyshideout.chococraft2.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 import uk.co.haxyshideout.chococraft2.network.PacketRegistry;
 import uk.co.haxyshideout.chococraft2.network.side.server.ChocopediaEditPacket;
 import uk.co.haxyshideout.chococraft2.network.side.server.DropGearPacket;
 
-import java.awt.*;
 import java.io.IOException;
 
 /**

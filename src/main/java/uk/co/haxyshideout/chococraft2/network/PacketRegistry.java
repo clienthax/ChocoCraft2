@@ -15,6 +15,7 @@ public class PacketRegistry {
 
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Constants.MODID);
 
+	@SuppressWarnings("UnusedAssignment")
 	public static void registerPackets() {
 		int id = 0;
 		INSTANCE.registerMessage(DropGearPacket.Handler.class, DropGearPacket.class, id++, Side.SERVER);

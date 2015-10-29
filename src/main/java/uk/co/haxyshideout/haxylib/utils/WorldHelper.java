@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by clienthax on 20/5/2015.
  */
+@SuppressWarnings("WhileLoopReplaceableByForEach")
 public class WorldHelper {
 
 	public static boolean isHellWorld(World world) {
