@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIMate;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityTameable;
@@ -93,6 +94,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		this.tasks.addTask(1, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
 		this.tasks.addTask(1, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
 		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+		this.tasks.addTask(1, new EntityAISwimming(this));
+
 
 		initChest();
 
@@ -150,6 +153,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			if (forward <= 0.0F)
 			{
 				forward *= 0.25F;
+			}
+
+			if(isInWater() && this.getAbilityInfo().canWalkOnWater()) {
+				motionY = 0.4d;
+				moveFlying(strafe, forward, 100 / getAbilityInfo().getWaterSpeed());
+				setJumping(true);
 			}
 
 			if (this.riderState.isJumping() && this.getAbilityInfo().getCanFly())
@@ -266,7 +275,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if (--timeUntilNextFeatherDrop <= 0)
 		{
 			// TODO config
-			if (RandomHelper.getChanceResult(80))
+			if (RandomHelper.getChanceResult(10))
 				entityDropItem(new ItemStack(Additions.chocoboFeatherItem), 0);
 			resetFeatherDropTime();
 		}
@@ -495,12 +504,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public boolean interact(EntityPlayer player)
 	{
-		if (!worldObj.isRemote)
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player)
-			{
+		if (!worldObj.isRemote) {
+			if (player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player) {
 				ChocoCraft2.proxy.openChocopedia(this);
 				return true;
 			}
+		}
 
 		if (worldObj.isRemote)// return if client
 			return false;
@@ -534,16 +543,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			}
 			return true;
 		}
-		else if (player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
-		{
-			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
-			this.fedGoldenGyshal = true;
-			this.setInLove(player);
-		} else if(player.getHeldItem().getItem() == Additions.gysahlLoverlyItem)
-		{
-			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
-			this.setInLove(player);
-		}
 
 		/*
 		 * Follow the player who clicked the entity if not tamed, if the chocobo is tamed, verify this is the owner, and then follow, if the entity is already following the player, stop following them.
@@ -567,10 +566,21 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if (!isTamed() || getOwner() != player)// Return if the chocobo is not tamed, as the following require that the chocobo is tamed. and that they are being used by the owner
 			return false;
 
+		if (player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
+		{
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+			this.fedGoldenGyshal = true;
+			this.setInLove(player);
+		} else if(player.getHeldItem().getItem() == Additions.gysahlLoverlyItem)
+		{
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+			this.setInLove(player);
+		}
+
 		if (player.getHeldItem().getItem() == Additions.chocoboSaddleItem && !isSaddled())
 		{
 			// if the player is holding a saddle and the chocobo is not saddled, saddle the chocobo
-			player.addChatComponentMessage(new ChatComponentText("Put saddle on Chocobo"));
+			player.addChatComponentMessage(new ChatComponentText("You put saddle on Chocobo"));//TODO lang
 			setSaddled(true);
 			return true;
 		}

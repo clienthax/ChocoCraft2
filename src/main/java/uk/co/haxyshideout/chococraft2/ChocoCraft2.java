@@ -23,9 +23,7 @@ import uk.co.haxyshideout.chococraft2.proxies.ServerProxy;
 public class ChocoCraft2 {
 	/*
 	TODO list
-	chicibos + growing + growing by cake
-	special ability code (possibly a extra handler for this), flying , falling damage, fire proof, speed etc
-	breeding!
+	breeding - mostly done, just need to adjust times for growup + implement growing up by cake
 	achievements
 	whole config system - use configurate, is awesome. as forges config system sucks.
 	swords dont break greens
@@ -36,14 +34,15 @@ public class ChocoCraft2 {
 	move out any reusable functions to haxylib
 
 	additions:
-	dyable collars! - going to need to get that bloody image generator working for this stuff..
 	implement chocobo whistle, should tp the last chocobo you rode to you aslong as you are in the same world ( spawn near the player?)
-	incubator
 	chocobos should run when they hear another chocobo being hurt
 	trusted riders
 	
 	new mechanics:
 	chocobos should lay eggs on straw that the player can pickup (block)
+	incubator - long term
+	dyable collars! - going to need to get that bloody image generator working for this stuff..
+
 
 
 
