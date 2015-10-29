@@ -597,6 +597,13 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			return true;
 		}
 
+		if(player.getHeldItem().getItem() == Additions.gysahlRedItem) {
+			setColor(ChocoboColor.RED);
+		}
+		if(player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
+			setColor(ChocoboColor.PINK);
+		}
+
 		return false;
 	}
 
