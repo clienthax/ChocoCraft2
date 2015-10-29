@@ -603,6 +603,13 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if(player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
 			setColor(ChocoboColor.PINK);
 		}
+		if(player.getHeldItem().getItem() == Additions.chocoboWhistleItem) {
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			tagCompound.setString("LinkedChocoboUUID", this.getUniqueID().toString());
+			player.getHeldItem().setTagCompound(tagCompound);
+			player.getHeldItem().setStackDisplayName(this.getCommandSenderName()+"'s Whistle");
+			player.addChatComponentMessage(new ChatComponentText("You linked the whistle to "+this.getCommandSenderName()));
+		}
 
 		return false;
 	}

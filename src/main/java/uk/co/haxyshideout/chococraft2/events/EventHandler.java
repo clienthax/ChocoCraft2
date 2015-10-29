@@ -33,8 +33,6 @@ import java.util.List;
  */
 public class EventHandler {
 
-	int spawnTimer = 0;
-
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onRightClickChocopedia(PlayerInteractEvent event) throws IOException {//TODO this is a terrible way to do this

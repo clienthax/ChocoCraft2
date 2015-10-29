@@ -10,6 +10,7 @@ import net.minecraft.potion.Potion;
 import net.minecraftforge.common.util.EnumHelper;
 import uk.co.haxyshideout.chococraft2.blocks.GysahlStemBlock;
 import uk.co.haxyshideout.chococraft2.blocks.StrawBlock;
+import uk.co.haxyshideout.chococraft2.items.ChocoboWhistleItem;
 import uk.co.haxyshideout.chococraft2.items.SpawnEggItem;
 import uk.co.haxyshideout.haxylib.items.GenericArmor;
 import uk.co.haxyshideout.haxylib.items.GenericItem;
@@ -106,7 +107,7 @@ public class Additions {
                 new GenericItem().setUnlocalizedName("chocoboSaddleBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
         chocoboPackBagItem =
                 new GenericItem().setUnlocalizedName("chocoboPackBagItem").setMaxStackSize(8).setCreativeTab(ChocoCreativeTabs.chococraft2);
-        chocoboWhistleItem = new GenericItem().setUnlocalizedName("chocoboWhistleItem").setCreativeTab(ChocoCreativeTabs.chococraft2);
+        chocoboWhistleItem = new ChocoboWhistleItem().setUnlocalizedName("chocoboWhistleItem").setMaxStackSize(1).setCreativeTab(ChocoCreativeTabs.chococraft2);
 
         chocoDisguiseHelm =
                 new GenericArmor(chocoDisguiseMaterial, 0, GenericArmor.ArmorType.Helm).setUnlocalizedName("chocoDisguiseHelm").setCreativeTab(
