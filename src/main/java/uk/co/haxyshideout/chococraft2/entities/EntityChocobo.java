@@ -5,7 +5,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,6 +33,7 @@ import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIWatchPlayer;
+import uk.co.haxyshideout.chococraft2.entities.breeding.Breeding;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 import uk.co.haxyshideout.haxylib.utils.WorldHelper;
@@ -51,6 +54,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	private AnimalChest chocoboChest;
 	private int timeUntilNextFeatherDrop;
 	private final RiderState riderState;
+	public boolean fedGoldenGyshal = false;
 
 	public enum ChocoboColor
 	{
@@ -88,6 +92,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
 		this.tasks.addTask(1, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
 		this.tasks.addTask(1, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
+		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
 
 		initChest();
 
@@ -419,18 +424,14 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	 */
 
 	@Override
-	public EntityAgeable createChild(EntityAgeable ageable)
+	public EntityAgeable createChild(EntityAgeable otherParent)
 	{
-		if (!this.worldObj.isRemote)
-		{
-			EntityBabyChocobo entity = new EntityBabyChocobo(ageable.worldObj);
-			entity.setColor(this.getChocoboColor());
-			entity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-			this.worldObj.spawnEntityInWorld(entity);
-			return entity;
-		}
-
-		return null;
+		EntityBabyChocobo entity = new EntityBabyChocobo(otherParent.worldObj);
+		entity.setColor(Breeding.getColour(this, (EntityChocobo) otherParent));
+		//Reset golden status
+		this.fedGoldenGyshal = false;
+		((EntityChocobo) otherParent).fedGoldenGyshal = false;
+		return entity;
 	}
 
 	@Override
@@ -535,7 +536,13 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 		else if (player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
 		{
-			this.createChild(this);
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+			this.fedGoldenGyshal = true;
+			this.setInLove(player);
+		} else if(player.getHeldItem().getItem() == Additions.gysahlLoverlyItem)
+		{
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+			this.setInLove(player);
 		}
 
 		/*
@@ -581,6 +588,14 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean canMateWith(EntityAnimal otherAnimal)
+	{//Check that its a chocobo and that its the right sex
+		return otherAnimal != this && (otherAnimal.getClass() == this.getClass() &&
+				this.isInLove() && otherAnimal.isInLove() && ((EntityChocobo)otherAnimal).isMale() != this.isMale()
+		);
 	}
 
 	@Override

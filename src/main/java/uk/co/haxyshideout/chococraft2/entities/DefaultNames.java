@@ -9,7 +9,7 @@ public class DefaultNames {
 
 	private static String maleNames[] =
 			{
-					"Boco", "Choco", "Patch", "Eddie", "Big Bird", "Chobi", "Horse Bird", "Mr. Yellowpuffs", "Oscar", "Wild",
+					"Arkio", "Boco", "Choco", "Patch", "Eddie", "Big Bird", "Chobi", "Horse Bird", "Mr. Yellowpuffs", "Oscar", "Wild",
 					"Stitch", "Milo", "Lewis", "Simon", "Steed", "Bocobo", "Chobo", "Butter Fingers", "Caspar", "Chubby",
 					"Coco", "Fuzzy", "Hulk", "Flopsy", "Lionel", "Tidus", "Cloud", "Sephiroth", "Butz", "Cecil", "Golbez",
 					"Squall", "Zidane", "Garnet", "Kuja", "Locke", "Celes", "Crafty", "Sparky", "Skippy",
