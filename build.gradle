@@ -23,9 +23,15 @@ archivesBaseName = "ChocoCraft2"
 
 idea { module { inheritOutputDirs = true } }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 minecraft {
     version = "1.8-11.14.3.1474"
     mappings = "snapshot_20150622"
+    srgExtra "PK: ninja/leaping uk/co/haxyshideout/shaded/ninja/leaping"
 }
 
 repositories {
@@ -33,10 +39,8 @@ repositories {
 }
 
 dependencies {
-    compile 'ninja.leaping.configurate:configurate-hocon:1.1.1'
+    shade 'ninja.leaping.configurate:configurate-hocon:1.1.1'
 }
-
-//sourceSets.main { java.srcDirs = ['main/src']; resources.srcDirs = ['main/resources']; output.resourcesDir = output.classesDir }
 
 processResources
 {
@@ -65,8 +69,14 @@ processResources
 // It also adds the minecraft version in a custom version name
 // The result is files named <projectname>-<mcversion>-<version>-universal.jar
 jar {
+    includeEmptyDirs = false
     classifier = 'universal'
     version = "${project.minecraft.version}-${project.version}"
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }
 
 task sourceJar(type: Jar) {
