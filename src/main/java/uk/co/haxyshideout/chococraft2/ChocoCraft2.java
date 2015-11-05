@@ -25,16 +25,16 @@ public class ChocoCraft2 {
 	/*
 	TODO list
 	achievements
-	swords dont break greens
 	set eye height of chocobo
 	Fix the god dam chocopedia entity info stuff
+	after chocobos are ridden their wings get stuck upwards =/
+	Check if purple chocobos lay egg like they are meant to
 
 	optimizations:
 	condense booleans in datawatcher.
 	move out any reusable functions to haxylib
 
 	additions:
-	implement chocobo whistle, should tp the last chocobo you rode to you aslong as you are in the same world ( spawn near the player?)
 	chocobos should run when they hear another chocobo being hurt
 	trusted riders
 	

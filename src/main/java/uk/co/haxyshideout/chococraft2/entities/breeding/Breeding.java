@@ -8,7 +8,7 @@ import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor
 
 public class Breeding {
 
-	public static ChocoboColor getColour(EntityChocobo firstParent, EntityChocobo secondParent) {
+	public static ChocoboColor getColour(EntityChocobo firstParent, EntityChocobo secondParent) {//TODO configs ;_;
 		boolean bothParentsFedGold = firstParent.fedGoldenGyshal && secondParent.fedGoldenGyshal;
 		int randColour = RandomHelper.getRandomInt(100);
 		ChocoboColor childColour = YELLOW;
