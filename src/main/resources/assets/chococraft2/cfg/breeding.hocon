@@ -1,0 +1,331 @@
+BreedingConfig {
+    BLACK {
+        "GOLD, PINK, RED"=[
+            {
+                childColour=GOLD
+                conditions=bothParentsFedGold
+                random="above 90"
+            }
+        ]
+        WHITE=[
+            {
+                childColour=GOLD
+                conditions=bothParentsFedGold
+                random="above 50"
+            },
+            {
+                childColour=WHITE
+                conditions=bothParentsFedGold
+                random="above 25"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 75"
+            },
+            {
+                childColour=WHITE
+                conditions=none
+                random="above 38"
+            }
+        ]
+        "YELLOW, GREEN, BLUE"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random="under 50"
+            }
+        ]
+    }
+    BLUE {
+        "BLACK, WHITE"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsFedGold
+                random="above 70"
+            },
+            {
+                childColour=secondParent
+                conditions=bothParentsFedGold
+                random="above 35"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 90"
+            },
+            {
+                childColour=secondParent
+                conditions=none
+                random="above 45"
+            }
+        ]
+        BLUE=[
+            {
+                childColour=WHITE
+                conditions=bothParentsFedGold
+                random="above 60"
+            },
+            {
+                childColour=BLUE
+                conditions=bothParentsFedGold
+                random="above 30"
+            },
+            {
+                childColour=WHITE
+                conditions=none
+                random="above 80"
+            },
+            {
+                childColour=BLUE
+                conditions=none
+                random="above 40"
+            }
+        ]
+        YELLOW=[
+            {
+                childColour=YELLOW
+                conditions=none
+                random="under 50"
+            }
+        ]
+    }
+    GOLD {
+        "GOLD, PINK, RED"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsNotFedGold
+                random="above 20"
+            }
+        ]
+        "YELLOW, GREEN, BLUE, WHITE, BLACK, PURPLE"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random=none
+            }
+        ]
+    }
+    GREEN {
+        "BLACK, WHITE"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsFedGold
+                random="above 70"
+            },
+            {
+                childColour=secondParent
+                conditions=bothParentsFedGold
+                random="above 35"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 90"
+            },
+            {
+                childColour=secondParent
+                conditions=none
+                random="above 45"
+            }
+        ]
+        BLUE=[
+            {
+                childColour=WHITE
+                conditions=bothParentsFedGold
+                random="above 60"
+            },
+            {
+                childColour=BLUE
+                conditions=bothParentsFedGold
+                random="above 30"
+            },
+            {
+                childColour=WHITE
+                conditions=none
+                random="above 80"
+            },
+            {
+                childColour=BLUE
+                conditions=none
+                random="above 40"
+            }
+        ]
+        YELLOW=[
+            {
+                childColour=YELLOW
+                conditions=none
+                random="under 50"
+            }
+        ]
+    }
+    PINK {
+        "GOLD, PINK, RED"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsNotFedGold
+                random="above 20"
+            }
+        ]
+        "YELLOW, GREEN, BLUE, WHITE, BLACK, PURPLE"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random=none
+            }
+        ]
+    }
+    PURPLE {
+        "YELLOW, GREEN, BLUE, WHITE, BLACK"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random=none
+            }
+        ]
+    }
+    RED {
+        "GOLD, PINK, RED"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsNotFedGold
+                random="above 20"
+            }
+        ]
+        "YELLOW, GREEN, BLUE, WHITE, BLACK, PURPLE"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random=none
+            }
+        ]
+    }
+    WHITE {
+        BLACK=[
+            {
+                childColour=GOLD
+                conditions=bothParentsFedGold
+                random="above 50"
+            },
+            {
+                childColour=BLACK
+                conditions=bothParentsFedGold
+                random="above 25"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 75"
+            },
+            {
+                childColour=BLACK
+                conditions=none
+                random="above 38"
+            }
+        ]
+        "GOLD, PINK, RED"=[
+            {
+                childColour=GOLD
+                conditions=bothParentsFedGold
+                random="above 70"
+            }
+        ]
+        "GREEN, BLUE"=[
+            {
+                childColour=YELLOW
+                conditions=bothParentsFedGold
+                random="above 70"
+            },
+            {
+                childColour=secondParent
+                conditions=bothParentsFedGold
+                random="above 35"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 90"
+            },
+            {
+                childColour=secondParent
+                conditions=none
+                random="above 45"
+            }
+        ]
+        YELLOW=[
+            {
+                childColour=BLACK
+                conditions=bothParentsFedGold
+                random="above 60"
+            },
+            {
+                childColour=YELLOW
+                conditions=bothParentsFedGold
+                random="above 30"
+            },
+            {
+                childColour=BLACK
+                conditions=none
+                random="above 80"
+            },
+            {
+                childColour=YELLOW
+                conditions=none
+                random="above 40"
+            }
+        ]
+    }
+    YELLOW {
+        "GREEN, BLUE, BLACK"=[
+            {
+                childColour=secondParent
+                conditions=none
+                random="above 50"
+            }
+        ]
+        WHITE=[
+            {
+                childColour=BLACK
+                conditions=bothParentsFedGold
+                random="above 60"
+            },
+            {
+                childColour=WHITE
+                conditions=bothParentsFedGold
+                random="above 30"
+            },
+            {
+                childColour=BLACK
+                conditions=none
+                random="above 80"
+            },
+            {
+                childColour=WHITE
+                conditions=none
+                random="above 40"
+            }
+        ]
+        YELLOW=[
+            {
+                childColour=BLUE
+                conditions=bothParentsFedGold
+                random="above 80"
+            },
+            {
+                childColour=GREEN
+                conditions=bothParentsFedGold
+                random="above 60"
+            },
+            {
+                childColour=BLUE
+                conditions=none
+                random="above 60"
+            },
+            {
+                childColour=GREEN
+                conditions=none
+                random="above 20"
+            }
+        ]
+    }
+}

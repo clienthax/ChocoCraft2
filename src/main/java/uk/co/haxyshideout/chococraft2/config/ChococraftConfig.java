@@ -1,6 +1,7 @@
 package uk.co.haxyshideout.chococraft2.config;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import net.minecraft.potion.PotionEffect;
@@ -10,12 +11,17 @@ import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.client.utils.HttpClientUtils;
 import uk.co.haxyshideout.chococraft2.entities.ChocoboAbilityInfo;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
 import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.*;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,12 +51,32 @@ public class ChococraftConfig
 	private int netherWeight;
 	@Getter
 	private int gysahlWorldGenWeight;
+	@Getter
+	private HashMap<String, HashMap<String, List<HashMap<String, String>>>> breedingInfoHashmap;
 
 	CommentedConfigurationNode mainNode;
 
 	public ChococraftConfig()
 	{
 		loadConfigFile();
+		loadBreedingConfigFile();
+	}
+
+	private void loadBreedingConfigFile() {
+		try {
+			File breedingConfigFile = new File("./config/", "chococraft2breeding.hocon");
+			if(!breedingConfigFile.exists()) {//TODO figure out how to copy this out of the jar/devenv at some point
+				FileUtils.writeLines(breedingConfigFile, Resources.readLines(new URL("https://raw.githubusercontent.com/clienthax/chococraft2/master/src/main/resources/assets/chococraft2/cfg/breeding.hocon"), Charset.defaultCharset()));
+			}
+			ConfigurationLoader<CommentedConfigurationNode> configurationLoader = HoconConfigurationLoader.builder().setFile(breedingConfigFile).build();
+			CommentedConfigurationNode mainNode = configurationLoader.load();
+			CommentedConfigurationNode breedingConfigNode = mainNode.getNode("BreedingConfig");
+			breedingInfoHashmap = breedingConfigNode.getValue(new TypeToken<HashMap<String, HashMap<String, List<HashMap<String, String>>>>>() {
+			});
+		} catch (Exception e) {
+			System.out.println("Error loading the chococraft 2 breeding config");
+			e.printStackTrace();
+		}
 	}
 
 	private void loadConfigFile() {
