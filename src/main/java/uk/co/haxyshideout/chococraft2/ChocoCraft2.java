@@ -1,5 +1,6 @@
 package uk.co.haxyshideout.chococraft2;
 
+import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -24,9 +25,9 @@ public class ChocoCraft2 {
 	/*
 	TODO list
 	achievements
-	whole config system - use configurate, is awesome. as forges config system sucks.
 	swords dont break greens
 	set eye height of chocobo
+	Fix the god dam chocopedia entity info stuff
 
 	optimizations:
 	condense booleans in datawatcher.
@@ -53,7 +54,8 @@ public class ChocoCraft2 {
 	@Mod.Instance(value = Constants.MODID)
 	public static ChocoCraft2 instance;
 
-	private ChococraftConfig chococraftConfig = new ChococraftConfig();
+	@Getter
+	private ChococraftConfig config = new ChococraftConfig();
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {

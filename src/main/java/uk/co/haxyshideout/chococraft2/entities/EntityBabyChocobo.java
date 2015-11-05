@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor;
@@ -20,8 +21,7 @@ import uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor;
 public class EntityBabyChocobo extends EntityAnimal
 {
     private int ticksExisted;
-	private final static int ticksToAdult = 27000;//TODO config
-    
+
 	public EntityBabyChocobo(World worldIn)
 	{
 		super(worldIn);
@@ -39,7 +39,7 @@ public class EntityBabyChocobo extends EntityAnimal
         super.onLivingUpdate();
         this.ticksExisted++;
         
-        if(this.ticksExisted >= ticksToAdult && !this.worldObj.isRemote)
+        if(this.ticksExisted >= ChocoCraft2.instance.getConfig().getTicksToAdult() && !this.worldObj.isRemote)
         {
 	        growUp();
         }

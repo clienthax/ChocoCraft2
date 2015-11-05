@@ -27,7 +27,7 @@ public class ChocoboAbilityInfo {
 	private List<PotionEffect> effectList = new ArrayList<PotionEffect>();
 	private float airSpeed;
 
-	public ChocoboAbilityInfo(EntityChocobo.ChocoboColor chocoboColor) {//TODO tie this into the config system
+	public ChocoboAbilityInfo(EntityChocobo.ChocoboColor chocoboColor) {
 		if(abilityInfos.containsKey(chocoboColor))
 			throw new UnsupportedOperationException("Editing defined abilities is not permitted");
 		this.chocoboColor = chocoboColor;

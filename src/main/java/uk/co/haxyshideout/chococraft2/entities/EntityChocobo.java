@@ -53,7 +53,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	private ChocoboAIAvoidPlayer chocoboAIAvoidPlayer;
 	private ChocoboAIHealInPen chocoboAIHealInPen;
 	private AnimalChest chocoboChest;
-	private int timeUntilNextFeatherDrop;
+	private int ticksUntilNextFeatherDrop;
 	private final RiderState riderState;
 	public boolean fedGoldenGyshal = false;
 
@@ -272,10 +272,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		}
 
 		// Drop a chocobo feather randomly
-		if (--timeUntilNextFeatherDrop <= 0)
+		if (--ticksUntilNextFeatherDrop <= 0)
 		{
-			// TODO config
-			if (RandomHelper.getChanceResult(10))
+			if (RandomHelper.getChanceResult(ChocoCraft2.instance.getConfig().getChangeForFeather()))
 				entityDropItem(new ItemStack(Additions.chocoboFeatherItem), 0);
 			resetFeatherDropTime();
 		}
@@ -293,7 +292,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	public void resetFeatherDropTime()
 	{
-		timeUntilNextFeatherDrop = rand.nextInt(500);// TODO config
+		ticksUntilNextFeatherDrop = rand.nextInt(ChocoCraft2.instance.getConfig().getTicksUntilNextFeather());
 	}
 
 	/*

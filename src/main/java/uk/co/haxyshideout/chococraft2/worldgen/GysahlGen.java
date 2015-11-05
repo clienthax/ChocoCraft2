@@ -23,7 +23,7 @@ public class GysahlGen implements IWorldGenerator {
 		if(!world.provider.isSurfaceWorld())//Only spawn in the main world
 			return;
 
-		if(!(random.nextInt(1000) < 100))//TODO config for gysahl world gen chance
+		if(!(random.nextInt(1000) < 100))
 			return;
 
 		int poxX = chunkX * 16 + random.nextInt(16);//gets us the world position of where to spawn the gysahls

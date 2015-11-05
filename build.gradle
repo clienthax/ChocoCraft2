@@ -36,10 +36,14 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven {
+        url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
 }
 
 dependencies {
-    shade 'ninja.leaping.configurate:configurate-hocon:1.1.1'
+    shade 'ninja.leaping.configurate:configurate-hocon:2.0.1-SNAPSHOT'
+    compile 'org.projectlombok:lombok:1.16.6'
 }
 
 processResources
