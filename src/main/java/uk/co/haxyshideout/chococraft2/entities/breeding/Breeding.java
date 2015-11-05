@@ -9,6 +9,7 @@ import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Breeding {
@@ -17,7 +18,7 @@ public class Breeding {
 		int randColour = RandomHelper.getRandomInt(100);
 		boolean bothParentsFedGold = firstParent.fedGoldenGyshal && secondParent.fedGoldenGyshal;
 		HashMap<String, List<HashMap<String, String>>> secondParentColourMaps = ChocoCraft2.instance.getConfig().getBreedingInfoHashmap().get(firstParent.getChocoboColor().name());
-		for(HashMap.Entry<String, List<HashMap<String, String>>> secondParentColourEntry : secondParentColourMaps.entrySet()) {
+		for(Map.Entry<String, List<HashMap<String, String>>> secondParentColourEntry : secondParentColourMaps.entrySet()) {
 			if(secondParentColourEntry.getKey().contains(secondParent.getChocoboColor().name())) {
 				List<HashMap<String, String>> breedingInfoList = secondParentColourEntry.getValue();
 				boolean flag = false;
