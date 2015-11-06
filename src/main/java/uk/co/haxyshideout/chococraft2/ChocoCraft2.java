@@ -28,7 +28,6 @@ public class ChocoCraft2 {
 	set eye height of chocobo
 	Fix the god dam chocopedia entity info stuff
 	after chocobos are ridden their wings get stuck upwards =/
-	Check if purple chocobos lay egg like they are meant to
 	chocobos sometimes run away to their original location after using the whistle
 
 	optimizations:

@@ -91,14 +91,14 @@ public class ChocoboAIMate extends EntityAIBase
 	private EntityChocobo getNearbyMate()
 	{
 		float f = 8.0F;
-		List list = this.theWorld.getEntitiesWithinAABB(this.theAnimal.getClass(), this.theAnimal.getEntityBoundingBox().expand((double)f, (double)f, (double)f));
+		List<EntityChocobo> list = (List<EntityChocobo>)this.theWorld.getEntitiesWithinAABB(EntityChocobo.class, this.theAnimal.getEntityBoundingBox().expand((double)f, (double)f, (double)f));
 		double d0 = Double.MAX_VALUE;
 		EntityChocobo entityanimal = null;
-		Iterator iterator = list.iterator();
+		Iterator<EntityChocobo> iterator = list.iterator();
 
 		while (iterator.hasNext())
 		{
-			EntityChocobo entityanimal1 = (EntityChocobo)iterator.next();
+			EntityChocobo entityanimal1 = iterator.next();
 
 			if (this.theAnimal.canMateWith(entityanimal1) && this.theAnimal.getDistanceSqToEntity(entityanimal1) < d0)
 			{

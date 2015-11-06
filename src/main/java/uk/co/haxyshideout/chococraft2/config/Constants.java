@@ -6,7 +6,7 @@ package uk.co.haxyshideout.chococraft2.config;
 public class Constants {
 	public static final String MODID = "chococraft2";
 	public static final String MODNAME = "ChocoCraft2";
-	public static final String MODVERSION = "0.0.1";
+	public static final String MODVERSION = "0.0.2";
 
 	// for EntityTamable, 2-5, 13-15, 18-31 are usable
 	// http://www.minecraftforge.net/wiki/Datawatcher

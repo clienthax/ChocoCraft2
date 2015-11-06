@@ -3,7 +3,7 @@
   "modid": "chococraft2",
   "name": "ChocoCraft2",
   "description": "Adds a mountable, breedable mob and supporting items.",
-  "version": "1.0",
+  "version": "0.0.2",
   "credits": "The MinecraftForge Community.",
   "logoFile": "chococraft_icon.png",
   "mcversion": "1.8",
