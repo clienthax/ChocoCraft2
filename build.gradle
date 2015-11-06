@@ -1,23 +1,18 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-apply plugin: 'forge'
-
-version = "1"
+version = "0.0.2"
 group= "uk.co.haxyshideout.ChocoCraft2" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ChocoCraft2"
 
@@ -29,9 +24,12 @@ configurations {
 }
 
 minecraft {
-    version = "1.8-11.14.3.1474"
-    mappings = "snapshot_20150622"
-    srgExtra "PK: ninja/leaping uk/co/haxyshideout/shaded/ninja/leaping"
+    version = "1.8-11.14.3.1550"
+    mappings = "snapshot_20151106"
+}
+
+reobfJar {
+    addExtraSrgLine "PK: ninja/leaping uk/co/haxyshideout/shaded/ninja/leaping"
 }
 
 repositories {
@@ -81,12 +79,6 @@ jar {
             exclude 'META-INF', 'META-INF/**'
         }
     }
-}
-
-task sourceJar(type: Jar) {
-	from sourceSets.main.allSource
-	classifier = 'src'
-    version = "${project.minecraft.version}-${project.version}"
 }
 
 // Add in an mcp named jar, for those who wish to run in a development environment (assuming mcp naming matches)

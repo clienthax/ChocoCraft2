@@ -87,6 +87,7 @@ public class ChocoboAIMate extends EntityAIBase
 	 * Loops through nearby animals and finds another animal of the same type that can be mated with. Returns the first
 	 * valid mate found.
 	 */
+	@SuppressWarnings("WhileLoopReplaceableByForEach")
 	private EntityChocobo getNearbyMate()
 	{
 		float f = 8.0F;
@@ -153,7 +154,7 @@ public class ChocoboAIMate extends EntityAIBase
 				double d0 = random.nextGaussian() * 0.02D;
 				double d1 = random.nextGaussian() * 0.02D;
 				double d2 = random.nextGaussian() * 0.02D;
-				this.theWorld.spawnParticle(EnumParticleTypes.HEART, this.theAnimal.posX + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, this.theAnimal.posY + 0.5D + (double)(random.nextFloat() * this.theAnimal.height), this.theAnimal.posZ + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, d0, d1, d2, new int[0]);
+				this.theWorld.spawnParticle(EnumParticleTypes.HEART, this.theAnimal.posX + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, this.theAnimal.posY + 0.5D + (double)(random.nextFloat() * this.theAnimal.height), this.theAnimal.posZ + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, d0, d1, d2);
 			}
 
 			if (this.theWorld.getGameRules().getGameRuleBooleanValue("doMobLoot"))
