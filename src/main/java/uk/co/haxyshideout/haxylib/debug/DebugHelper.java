@@ -7,6 +7,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+@SuppressWarnings("unchecked")
 public class DebugHelper {
 
 	public static void langCheck(String modid) {

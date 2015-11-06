@@ -34,6 +34,7 @@ public class EntityBabyChocobo extends EntityAnimal
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityMob.class, true));
 	}
 
+	@Override
 	public void onLivingUpdate()
     {
         super.onLivingUpdate();

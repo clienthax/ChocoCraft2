@@ -29,6 +29,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 		{
 			return entityIn.isEntityAlive() && ChocoboAIAvoidPlayer.this.theEntity.getEntitySenses().canSee(entityIn);
 		}
+		@Override
 		public boolean apply(Object p_apply_1_)
 		{
 			return this.isApplicable((Entity)p_apply_1_);
@@ -54,6 +55,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 			}
 			return false;
 		}
+		@Override
 		public boolean apply(Object object)
 		{
 			return this.apply((Entity)object);
@@ -86,6 +88,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
+	@Override
 	public boolean shouldExecute()
 	{
 		if(theEntity.worldObj.getWorldTime() % 10 != 0)
@@ -121,6 +124,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/**
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
+	@Override
 	public boolean continueExecuting()
 	{
 		return !this.entityPathNavigate.noPath();
@@ -129,6 +133,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
+	@Override
 	public void startExecuting()
 	{
 		this.entityPathNavigate.setPath(this.entityPathEntity, this.farSpeed);
@@ -137,6 +142,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/**
 	 * Resets the task
 	 */
+	@Override
 	public void resetTask()
 	{
 		this.closestLivingEntity = null;
@@ -145,6 +151,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 	/**
 	 * Updates the task
 	 */
+	@Override
 	public void updateTask()
 	{
 		if (this.theEntity.getDistanceSqToEntity(this.closestLivingEntity) < 49.0D)

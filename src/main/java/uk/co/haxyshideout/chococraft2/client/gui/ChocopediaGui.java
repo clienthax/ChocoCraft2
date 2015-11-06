@@ -44,6 +44,7 @@ public class ChocopediaGui extends GuiScreen {
 	 * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
 	 * window resizes, the buttonList is cleared beforehand.
 	 */
+	@SuppressWarnings({"unchecked", "UnusedAssignment"})
 	@Override
 	public void initGui() {
 		int componentID = 0;
@@ -72,6 +73,7 @@ public class ChocopediaGui extends GuiScreen {
 
 	}
 
+	@SuppressWarnings("UnusedAssignment")
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();

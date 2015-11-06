@@ -44,12 +44,10 @@ public class ServerProxy
 
 	public void openChocopedia(EntityChocobo chocobo)
 	{
-		;
 	}
 
 	public void updateRiderState(EntityPlayer rider)
 	{
-		;
 	}
 
 }

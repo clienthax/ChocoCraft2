@@ -22,6 +22,7 @@ import uk.co.haxyshideout.haxylib.utils.RegistryHelper;
  * Created by clienthax on 12/4/2015. Should contain every block and item that
  * is added from the mod.
  */
+@SuppressWarnings("unused")
 public class Additions {
 
     public static Block gysahlStemBlock;
@@ -36,7 +37,7 @@ public class Additions {
     public static Item gysahlRawPicklesItem;
     public static Item gysahlCookedPicklesItem;
     public static Item gysahlCakeItem;
-    public static Item gysahlChibiItem;// I have no idea what this is for.
+    public static Item gysahlChibiItem;// I have no idea what this is for. - aprantly makes it so baby's never grow up
 
     public static Item chocoboFeatherItem;
     public static Item chocoboLegRawItem;

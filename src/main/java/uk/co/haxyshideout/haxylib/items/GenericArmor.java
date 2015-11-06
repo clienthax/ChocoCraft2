@@ -4,7 +4,7 @@ import net.minecraft.item.ItemArmor;
 
 public class GenericArmor extends ItemArmor implements IJsonItem {
 
-	public static enum ArmorType {Helm,Plate,Legs,Boots}
+	public enum ArmorType {Helm,Plate,Legs,Boots}
 	public boolean equippedSet = false;
 
 	public GenericArmor(ArmorMaterial material, int renderIndex, ArmorType armorType) {

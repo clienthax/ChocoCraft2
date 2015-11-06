@@ -21,6 +21,7 @@ public class GenericBlock extends Block {
 		return this;
 	}
 
+	@Override
 	public boolean isFullCube() {
 		return fullcube;
 	}

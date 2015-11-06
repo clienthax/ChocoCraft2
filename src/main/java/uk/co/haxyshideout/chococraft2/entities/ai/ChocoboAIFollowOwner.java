@@ -40,6 +40,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
+	@Override
 	public boolean shouldExecute()
 	{
 		EntityLivingBase owner = this.chocobo.getOwnerEntity();
@@ -66,6 +67,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	/**
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
+	@Override
 	public boolean continueExecuting()
 	{
 		return !this.petPathfinder.noPath() && this.chocobo.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist) && chocobo.getMovementType() == EntityChocobo.MovementType.FOLLOW_OWNER;
@@ -74,6 +76,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
+	@Override
 	public void startExecuting()
 	{
 		this.field_75343_h = 0;
@@ -83,6 +86,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	/**
 	 * Resets the task
 	 */
+	@Override
 	public void resetTask()
 	{
 		this.theOwner = null;
@@ -93,6 +97,7 @@ public class ChocoboAIFollowOwner extends EntityAIBase
 	/**
 	 * Updates the task
 	 */
+	@Override
 	public void updateTask()
 	{
 		this.chocobo.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float)this.chocobo.getVerticalFaceSpeed());
