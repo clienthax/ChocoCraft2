@@ -33,6 +33,7 @@ import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIAvoidPlayer;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowLure;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIFollowOwner;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIHealInPen;
+import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIMate;
 import uk.co.haxyshideout.chococraft2.entities.ai.ChocoboAIWatchPlayer;
 import uk.co.haxyshideout.chococraft2.entities.breeding.Breeding;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
@@ -93,7 +94,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
 		this.tasks.addTask(1, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
 		this.tasks.addTask(1, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
-		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+		this.tasks.addTask(2, new ChocoboAIMate(this, 1.0D));
 		this.tasks.addTask(1, new EntityAISwimming(this));
 
 
