@@ -529,16 +529,24 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 		if (player.getHeldItem().getItem() == Additions.gysahlGreenItem)
 		{// random chance of taming + random healing amount
-			if (!isTamed() && RandomHelper.getChanceResult(10))
-			{
-				setOwnerId(player.getUniqueID().toString());
-				setTamed(true);
-				InventoryHelper.giveIfMissing(new ItemStack(Additions.chocopediaItem), (EntityPlayerMP) player);
-				player.addChatComponentMessage(new ChatComponentText("You tamed the chocobo!"));
+			if (!isTamed()) {
+				this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+				player.addChatComponentMessage(new ChatComponentText("You attempt to tame the wild Chocobo"));
+				if(RandomHelper.getChanceResult(10)) {//Successfull tame
+					setOwnerId(player.getUniqueID().toString());
+					setTamed(true);
+					InventoryHelper.giveIfMissing(new ItemStack(Additions.chocopediaItem), (EntityPlayerMP) player);
+					player.addChatComponentMessage(new ChatComponentText("You tamed the Chocobo!"));
+				}
 			}
 			else if (isTamed())
 			{
-				heal(RandomHelper.getRandomInt(5));
+				if(getHealth() != getMaxHealth()) {
+					this.consumeItemFromStack(player, player.inventory.getCurrentItem());
+					heal(RandomHelper.getRandomInt(5));
+				} else {
+					player.addChatComponentMessage(new ChatComponentText("This Chocobo is already at full health!"));
+				}
 			}
 			return true;
 		}
@@ -578,6 +586,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 		if (player.getHeldItem().getItem() == Additions.chocoboSaddleItem && !isSaddled())
 		{
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			// if the player is holding a saddle and the chocobo is not saddled, saddle the chocobo
 			player.addChatComponentMessage(new ChatComponentText("You put saddle on Chocobo"));//TODO lang
 			setSaddled(true);
@@ -586,20 +595,24 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 		if (player.getHeldItem().getItem() == Additions.chocoboSaddleBagItem && getBagType() == BagType.NONE && isSaddled())
 		{// holding a saddle bag and no bag on chocobo, chocobo needs to be saddled
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setBag(BagType.SADDLE);
 			return true;
 		}
 
 		if (player.getHeldItem().getItem() == Additions.chocoboPackBagItem && getBagType() == BagType.NONE)
 		{// holding a pack bag and no bag on chocobo, remove the saddle if the chocobo is saddled
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setBag(BagType.PACK);
 			return true;
 		}
 
 		if(player.getHeldItem().getItem() == Additions.gysahlRedItem) {
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.RED);
 		}
 		if(player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.PINK);
 		}
 		if(player.getHeldItem().getItem() == Additions.chocoboWhistleItem) {

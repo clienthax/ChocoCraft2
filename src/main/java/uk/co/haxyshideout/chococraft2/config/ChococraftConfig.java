@@ -1,22 +1,26 @@
 package uk.co.haxyshideout.chococraft2.config;
 
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.BLACK;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.BLUE;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.GOLD;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.GREEN;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.PINK;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.PURPLE;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.RED;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.WHITE;
+import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.YELLOW;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeGenBase;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.utils.HttpClientUtils;
 import uk.co.haxyshideout.chococraft2.entities.ChocoboAbilityInfo;
-import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
-
-import static uk.co.haxyshideout.chococraft2.entities.EntityChocobo.ChocoboColor.*;
 
 import java.io.File;
 import java.net.URL;
@@ -89,7 +93,7 @@ public class ChococraftConfig
 			CommentedConfigurationNode adultNode = mainNode.getNode("adults");
 			CommentedConfigurationNode adultDropsNode = adultNode.getNode("drops");
 			changeForFeather = adultDropsNode.getNode("changeForFeather").setComment("The change out of 100, for a feather to drop from a chocobo (Default 10)").getInt(10);
-			ticksUntilNextFeather = adultDropsNode.getNode("ticksUntilNextFeather").setComment("How many ticks between a change for a feather to drop (Default 500)").getInt(500);
+			ticksUntilNextFeather = adultDropsNode.getNode("ticksUntilNextFeather").setComment("How many ticks between a change for a feather to drop (Default 5000)").getInt(5000);
 			CommentedConfigurationNode adultSpawnNode = adultNode.getNode("spawns");
 			List<String> defaultSpawnBiomes = Lists.newArrayList("TaigaHills", "Jungle", "JungleHills", "Plains",
 					"Taiga", "Forest", "ForestHills", "Swampland", "River", "Beach", "Desert", "Extreme Hills",

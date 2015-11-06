@@ -64,6 +64,7 @@ public class EntityBabyChocobo extends EntityAnimal
 
 		if (player.getHeldItem().getItem() == Additions.gysahlCakeItem)
 		{
+			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			growUp();
 		}
 
