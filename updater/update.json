@@ -1,10 +1,11 @@
 {
   "homepage": "http://minecraft.curseforge.com/projects/chococraft",
   "promos": {
-    "1.8-latest": "Alpha 2",
-    "1.8-recommended": "Alpha 2"
+    "1.8-latest": "0.0.2",
+    "1.8-recommended": "0.0.2"
   },
   "1.8": {
-    "Alpha 2": "fFix items not being consumed on interaction with chocobos\nImplemented config system\nAll abilities and breeding are now configurable.",
+    "0.0.2": "Alpha 2, Fix purple chocobos not dropping egg when breed, Fix items not being consumed on interaction with chocobos\nImplemented config system\nAll abilities and breeding are now configurable.",
+    "0.0.1": "Alpha 1, Rewrite for 1.8"
   }
 }
