@@ -20,7 +20,7 @@ import uk.co.haxyshideout.chococraft2.proxies.ServerProxy;
 /**
  * Created by clienthax on 12/4/2015.
  */
-@Mod(modid = Constants.MODID, name = Constants.MODNAME, version = Constants.MODVERSION)
+@Mod(modid = Constants.MODID, name = Constants.MODNAME, version = Constants.MODVERSION, updateJSON = "https://raw.githubusercontent.com/clienthax/ChocoCraft2/master/updater/update.json")
 public class ChocoCraft2 {
 	/*
 	TODO list
