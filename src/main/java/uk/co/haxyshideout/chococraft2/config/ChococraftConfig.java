@@ -56,7 +56,7 @@ public class ChococraftConfig
 	@Getter
 	private int gysahlWorldGenWeight;
 	@Getter
-	private HashMap<String, HashMap<String, List<HashMap<String, String>>>> breedingInfoHashmap;
+	private HashMap<String, HashMap<String, List<HashMap<String, String>>>> breedingInfoHashmap;//TODO at some point reference this directly through configurate instead of this giant map of doom
 
 	CommentedConfigurationNode mainNode;
 

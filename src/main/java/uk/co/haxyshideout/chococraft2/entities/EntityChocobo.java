@@ -128,9 +128,10 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	public void setStats()
 	{
-		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health to 30
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health
 		setHealth(getMaxHealth());// reset the hp to max
 		onGroundSpeedFactor = this.getAbilityInfo().getLandSpeed() / 100f;
+		this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).setBaseValue(onGroundSpeedFactor);
 	}
 
 	public RiderState getRiderState()
@@ -232,7 +233,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		super.onLivingUpdate();
 
-		if (this.getAbilityInfo().canClimb())
+		if (this.getAbilityInfo().canClimb() || this.riddenByEntity != null)
 		{
 			this.stepHeight = 1.0F;
 		}
@@ -608,11 +609,11 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			return true;
 		}
 
-		if(player.getHeldItem().getItem() == Additions.gysahlRedItem) {
+		if(getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem().getItem() == Additions.gysahlRedItem) {
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.RED);
 		}
-		if(player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
+		if(getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.PINK);
 		}
