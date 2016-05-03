@@ -25,6 +25,7 @@ configurations {
 
 minecraft {
     version = "1.8-11.14.3.1550"
+    runDir = "run"
     mappings = "snapshot_20151106"
 }
 

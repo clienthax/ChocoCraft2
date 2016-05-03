@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
@@ -63,6 +65,7 @@ public class ClientProxy extends ServerProxy
 		chocobo.getRiderState().resetChanged();
 	}
 
+	@SideOnly(Side.CLIENT)
 	private RiderState getRiderState(Entity rider)
 	{
 		EntityPlayerSP riderSP = (EntityPlayerSP) rider;
