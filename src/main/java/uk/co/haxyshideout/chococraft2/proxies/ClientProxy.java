@@ -55,7 +55,7 @@ public class ClientProxy extends ServerProxy
 	@Override
 	public void updateRiderState(EntityPlayer rider)
 	{
-		EntityChocobo chocobo = (EntityChocobo) rider.ridingEntity;
+		EntityChocobo chocobo = (EntityChocobo) rider.getRidingEntity();
 		chocobo.getRiderState().updateState(getRiderState(rider));
 		if (chocobo.getRiderState().hasChanged())
 		{

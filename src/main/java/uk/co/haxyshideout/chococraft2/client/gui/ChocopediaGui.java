@@ -35,7 +35,7 @@ public class ChocopediaGui extends GuiScreen {
 
 	public ChocopediaGui(EntityChocobo chocobo) {
 		this.chocobo = chocobo;
-		owner = Minecraft.getMinecraft().thePlayer.getCommandSenderName();
+		owner = Minecraft.getMinecraft().thePlayer.getName();
 		name = chocobo.getCustomNameTag();
 		movementType = chocobo.getMovementType();
 	}

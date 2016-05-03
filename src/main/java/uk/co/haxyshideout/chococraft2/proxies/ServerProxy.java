@@ -34,7 +34,7 @@ public class ServerProxy
 		ChococraftConfig config = ChocoCraft2.instance.getConfig();
 		List<BiomeGenBase> spawnBiomes = config.getSpawnBiomes();
 		EntityRegistry.addSpawn(EntityChocobo.class, config.getOverworldWeight(), config.getOverworldMinGroup(), config.getOverworldMaxGroup(), EnumCreatureType.CREATURE, spawnBiomes.toArray(new BiomeGenBase[spawnBiomes.size()]));
-		EntityRegistry.addSpawn(EntityChocobo.class, config.getNetherWeight(), config.getNetherMinGroup(), config.getNetherMaxGroup(), EnumCreatureType.CREATURE, BiomeGenBase.hell);
+		EntityRegistry.addSpawn(EntityChocobo.class, config.getNetherWeight(), config.getNetherMinGroup(), config.getNetherMaxGroup(), EnumCreatureType.CREATURE, BiomeGenBase.getBiome(8));
 	}
 
 	public void registerWorldGenerators()

@@ -1,11 +1,14 @@
 package uk.co.haxyshideout.chococraft2.entities;
 
+import javax.annotation.Nullable;
+
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -19,13 +22,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import org.lwjgl.input.Keyboard;
 import uk.co.haxyshideout.chococraft2.ChocoCraft2;
 import uk.co.haxyshideout.chococraft2.config.Additions;
 import uk.co.haxyshideout.chococraft2.config.Constants;
@@ -39,8 +44,6 @@ import uk.co.haxyshideout.chococraft2.entities.breeding.Breeding;
 import uk.co.haxyshideout.haxylib.utils.InventoryHelper;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
 import uk.co.haxyshideout.haxylib.utils.WorldHelper;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by clienthax on 14/4/2015.
@@ -60,15 +63,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	public enum ChocoboColor
 	{
-		YELLOW,
-		GREEN,
-		BLUE,
-		WHITE,
-		BLACK,
-		GOLD,
-		PINK,
-		RED,
-		PURPLE
+		YELLOW, GREEN, BLUE, WHITE, BLACK, GOLD, PINK, RED, PURPLE
 	}
 
 	public enum BagType
@@ -89,14 +84,13 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		setCustomNameTag(DefaultNames.getRandomName(isMale()));
 		resetFeatherDropTime();
 		riderState = new RiderState();
-		((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+		((PathNavigateGround) this.getNavigator()).setCanSwim(false);
 		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(1, new ChocoboAIFollowOwner(this, 1.0D, 5.0F, 5.0F));// follow speed 1, min and max 5
 		this.tasks.addTask(1, new ChocoboAIFollowLure(this, 1.0D, 5.0F, 5.0F));
 		this.tasks.addTask(1, new ChocoboAIWatchPlayer(this, EntityPlayer.class, 5));
 		this.tasks.addTask(2, new ChocoboAIMate(this, 1.0D));
 		this.tasks.addTask(1, new EntityAISwimming(this));
-
 
 		initChest();
 
@@ -112,11 +106,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		this.isImmuneToFire = getAbilityInfo().isImmuneToFire();
 	}
 
-	@Override
 	public void mountEntity(Entity entityIn)
 	{
-		super.mountEntity(entityIn);
-
 		if (this.worldObj.isRemote)
 		{
 			if (Minecraft.getMinecraft().thePlayer.getUniqueID().equals(entityIn.getUniqueID()))
@@ -128,10 +119,10 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	public void setStats()
 	{
-		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getAbilityInfo().getMaxHP());// set max health
 		setHealth(getMaxHealth());// reset the hp to max
 		onGroundSpeedFactor = this.getAbilityInfo().getLandSpeed() / 100f;
-		this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).setBaseValue(onGroundSpeedFactor);
+		this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(onGroundSpeedFactor);
 	}
 
 	public RiderState getRiderState()
@@ -143,21 +134,22 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	public void moveEntityWithHeading(float strafe, float forward)
 	{
 		// TODO some point in future, move this to its own ai class
-		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase)
+		if (this.getControllingPassenger() != null && this.getControllingPassenger() instanceof EntityLivingBase)
 		{
-			this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-			this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
+			this.prevRotationYaw = this.rotationYaw = this.getControllingPassenger().rotationYaw;
+			this.rotationPitch = this.getControllingPassenger().rotationPitch * 0.5F;
 			this.setRotation(this.rotationYaw, this.rotationPitch);
 			this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-			strafe = ((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F;
-			forward = ((EntityLivingBase) this.riddenByEntity).moveForward;
+			strafe = ((EntityLivingBase) this.getControllingPassenger()).moveStrafing * 0.5F;
+			forward = ((EntityLivingBase) this.getControllingPassenger()).moveForward;
 
 			if (forward <= 0.0F)
 			{
 				forward *= 0.25F;
 			}
 
-			if(isInWater() && this.getAbilityInfo().canWalkOnWater()) {
+			if (isInWater() && this.getAbilityInfo().canWalkOnWater())
+			{
 				motionY = 0.4d;
 				moveFlying(strafe, forward, 100 / getAbilityInfo().getWaterSpeed());
 				setJumping(true);
@@ -177,7 +169,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			}
 			if (!this.worldObj.isRemote)
 			{
-				this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+				this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
 				super.moveEntityWithHeading(strafe, forward);
 			}
 
@@ -193,7 +185,9 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 			this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
 			this.limbSwing += this.limbSwingAmount;
-		} else {
+		}
+		else
+		{
 			super.moveEntityWithHeading(strafe, forward);
 		}
 	}
@@ -224,7 +218,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	}
 
 	@Override
-	public boolean isBreedingItem(ItemStack itemStack) {
+	public boolean isBreedingItem(ItemStack itemStack)
+	{
 		return itemStack.getItem() == Additions.gysahlLoverlyItem || itemStack.getItem() == Additions.gysahlGoldenItem;
 	}
 
@@ -233,7 +228,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		super.onLivingUpdate();
 
-		if (this.getAbilityInfo().canClimb() || this.riddenByEntity != null)
+		if (this.getAbilityInfo().canClimb() || this.getControllingPassenger() != null)
 		{
 			this.stepHeight = 1.0F;
 		}
@@ -244,14 +239,14 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if (worldObj.isRemote)
 		{
 			// Client side
-			if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
+			if (this.getControllingPassenger() != null && this.getControllingPassenger() instanceof EntityPlayer)
 			{
-				if (Minecraft.getMinecraft().thePlayer.getUniqueID().equals(riddenByEntity.getUniqueID()) && Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+				if (Minecraft.getMinecraft().thePlayer.getUniqueID().equals(this.getControllingPassenger().getUniqueID()) && Keyboard.isKeyDown(Keyboard.KEY_SPACE))
 				{
 					this.riderState.setJumping(true);
 				}
-				
-				ChocoCraft2.proxy.updateRiderState((EntityPlayer) riddenByEntity);
+
+				ChocoCraft2.proxy.updateRiderState((EntityPlayer) this.getControllingPassenger());
 			}
 
 			this.destPos += (double) (this.onGround ? -1 : 4) * 0.3D;
@@ -281,12 +276,12 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			resetFeatherDropTime();
 		}
 
-		if (riddenByEntity != null)
+		if (this.getControllingPassenger() != null)
 		{
 			// TODO is this needed?
 			rotationPitch = 0;
-			rotationYaw = riddenByEntity.rotationYaw;
-			prevRotationYaw = riddenByEntity.rotationYaw;
+			rotationYaw = this.getControllingPassenger().rotationYaw;
+			prevRotationYaw = this.getControllingPassenger().rotationYaw;
 			setRotation(rotationYaw, rotationPitch);
 		}
 
@@ -366,67 +361,67 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		super.entityInit();
 		// corresponding to enum.ordinal
-		this.dataWatcher.addObject(Constants.dataWatcherVariant, (byte) 0);
+		this.dataWatcher.register(Constants.dataWatcherVariant, (byte) 0);
 		// 0 for no bag, 1 for saddlebag, 2 for pack bag
-		this.dataWatcher.addObject(Constants.dataWatcherBagType, (byte) 0);
+		this.dataWatcher.register(Constants.dataWatcherBagType, (byte) 0);
 		// 1 if saddled, 0 if not
-		this.dataWatcher.addObject(Constants.dataWatcherSaddled, (byte) 0);
+		this.dataWatcher.register(Constants.dataWatcherSaddled, (byte) 0);
 		// 1 if male, 0 if not
-		this.dataWatcher.addObject(Constants.dataWatcherMale, (byte) 0);
+		this.dataWatcher.register(Constants.dataWatcherMale, (byte) 0);
 		// 0 if wandering, 1 if following owner, 2 staying still
-		this.dataWatcher.addObject(Constants.dataWatcherFollowingOwner, (byte) 0);
+		this.dataWatcher.register(Constants.dataWatcherFollowingOwner, (byte) 0);
 	}
 
 	public void setColor(ChocoboColor color)
 	{
-		dataWatcher.updateObject(Constants.dataWatcherVariant, (byte) color.ordinal());
+		dataWatcher.set(Constants.dataWatcherVariant, (byte) color.ordinal());
 		setStats();
 	}
 
 	public ChocoboColor getChocoboColor()
 	{
-		return ChocoboColor.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherVariant)];
+		return ChocoboColor.values()[dataWatcher.get(Constants.dataWatcherVariant)];
 	}
 
 	public void setBag(BagType bag)
 	{
-		dataWatcher.updateObject(Constants.dataWatcherBagType, (byte) bag.ordinal());
+		dataWatcher.set(Constants.dataWatcherBagType, (byte) bag.ordinal());
 		initChest();
 	}
 
 	public BagType getBagType()
 	{
-		return BagType.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherBagType)];
+		return BagType.values()[dataWatcher.get(Constants.dataWatcherBagType)];
 	}
 
 	public void setSaddled(boolean saddled)
 	{
-		dataWatcher.updateObject(Constants.dataWatcherSaddled, (byte) (saddled ? 1 : 0));
+		dataWatcher.set(Constants.dataWatcherSaddled, (byte) (saddled ? 1 : 0));
 	}
 
 	public boolean isSaddled()
 	{
-		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherSaddled) == 1;
+		return dataWatcher.get(Constants.dataWatcherSaddled) == 1;
 	}
 
 	public void setMale(boolean isMale)
 	{
-		dataWatcher.updateObject(Constants.dataWatcherMale, (byte) (isMale ? 1 : 0));
+		dataWatcher.set(Constants.dataWatcherMale, (byte) (isMale ? 1 : 0));
 	}
 
 	public boolean isMale()
 	{
-		return dataWatcher.getWatchableObjectByte(Constants.dataWatcherMale) == 1;
+		return dataWatcher.get(Constants.dataWatcherMale) == 1;
 	}
 
 	public void setMovementType(MovementType movementType)
 	{
-		dataWatcher.updateObject(Constants.dataWatcherFollowingOwner, (byte) movementType.ordinal());
+		dataWatcher.set(Constants.dataWatcherFollowingOwner, (byte) movementType.ordinal());
 	}
 
 	public MovementType getMovementType()
 	{
-		return MovementType.values()[dataWatcher.getWatchableObjectByte(Constants.dataWatcherFollowingOwner)];
+		return MovementType.values()[dataWatcher.get(Constants.dataWatcherFollowingOwner)];
 	}
 
 	/*
@@ -438,29 +433,29 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	{
 		EntityBabyChocobo entity = new EntityBabyChocobo(otherParent.worldObj);
 		entity.setColor(Breeding.getColour(this, (EntityChocobo) otherParent));
-		//Reset golden status
+		// Reset golden status
 		this.fedGoldenGyshal = false;
 		((EntityChocobo) otherParent).fedGoldenGyshal = false;
 		return entity;
 	}
 
 	@Override
-	protected String getDeathSound()
+	protected SoundEvent getDeathSound()
 	{
-		return "chococraft2:choco_kweh";
+		return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
 	}
 
 	@Override
-	protected String getHurtSound()
+	protected SoundEvent getHurtSound()
 	{
-		return "chococraft2:choco_kweh";
+		return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
 	}
 
 	@Override
-	protected String getLivingSound()
+	protected SoundEvent getAmbientSound()
 	{
 		if (rand.nextInt(4) == 0)
-			return "chococraft2:choco_kweh";
+			return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
 
 		return null;
 	}
@@ -499,14 +494,16 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	public boolean getAlwaysRenderNameTagForRender()
 	{
-		return (isTamed() && riddenByEntity == null);
+		return (isTamed() && this.getControllingPassenger() == null);
 	}
 
 	@Override
-	public boolean interact(EntityPlayer player)
+	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
 	{
-		if (!worldObj.isRemote) {
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player) {
+		if (!worldObj.isRemote)
+		{
+			if (player.getHeldItem(hand) != null && player.getHeldItem(hand).getItem() == Additions.chocopediaItem && isTamed() && getOwner() == player)
+			{
 				ChocoCraft2.proxy.openChocopedia(this);
 				return true;
 			}
@@ -515,9 +512,10 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if (worldObj.isRemote)// return if client
 			return false;
 
-		if (player.getHeldItem() == null && isSaddled() && !player.isSneaking())
+		if (player.getHeldItem(hand) == null && isSaddled() && !player.isSneaking())
 		{// If the player is not holding anything and the chocobo is saddled, mount the chocobo
-			player.mountEntity(this);
+			player.startRiding(this);
+			this.mountEntity(player);
 			return true;
 		}
 
@@ -526,28 +524,33 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 			player.displayGUIChest(chocoboChest);
 		}
 
-		if (player.getHeldItem() == null)// Make sure the player is holding something for the following checks
+		if (player.getHeldItem(hand) == null)// Make sure the player is holding something for the following checks
 			return false;
 
-		if (player.getHeldItem().getItem() == Additions.gysahlGreenItem)
+		if (player.getHeldItem(hand).getItem() == Additions.gysahlGreenItem)
 		{// random chance of taming + random healing amount
-			if (!isTamed()) {
+			if (!isTamed())
+			{
 				this.consumeItemFromStack(player, player.inventory.getCurrentItem());
-				player.addChatComponentMessage(new ChatComponentText("You attempt to tame the wild Chocobo"));
-				if(RandomHelper.getChanceResult(10)) {//Successfull tame
-					setOwnerId(player.getUniqueID().toString());
+				player.addChatComponentMessage(new TextComponentString("You attempt to tame the wild Chocobo"));
+				if (RandomHelper.getChanceResult(10))
+				{// Successfull tame
+					setOwnerId(player.getUniqueID());
 					setTamed(true);
 					InventoryHelper.giveIfMissing(new ItemStack(Additions.chocopediaItem), (EntityPlayerMP) player);
-					player.addChatComponentMessage(new ChatComponentText("You tamed the Chocobo!"));
+					player.addChatComponentMessage(new TextComponentString("You tamed the Chocobo!"));
 				}
 			}
 			else if (isTamed())
 			{
-				if(getHealth() != getMaxHealth()) {
+				if (getHealth() != getMaxHealth())
+				{
 					this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 					heal(RandomHelper.getRandomInt(5));
-				} else {
-					player.addChatComponentMessage(new ChatComponentText("This Chocobo is already at full health!"));
+				}
+				else
+				{
+					player.addChatComponentMessage(new TextComponentString("This Chocobo is already at full health!"));
 				}
 			}
 			return true;
@@ -556,7 +559,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		/*
 		 * Follow the player who clicked the entity if not tamed, if the chocobo is tamed, verify this is the owner, and then follow, if the entity is already following the player, stop following them.
 		 */
-		if (player.getHeldItem().getItem() == Additions.chocoboFeatherItem)
+		if (player.getHeldItem(hand).getItem() == Additions.chocoboFeatherItem)
 		{
 			if (getMovementType() == MovementType.FOLLOW_LURE && entityLuring != null && entityLuring == player)
 			{
@@ -575,54 +578,58 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 		if (!isTamed() || getOwner() != player)// Return if the chocobo is not tamed, as the following require that the chocobo is tamed. and that they are being used by the owner
 			return false;
 
-		if (player.getHeldItem().getItem() == Additions.gysahlGoldenItem)
+		if (player.getHeldItem(hand).getItem() == Additions.gysahlGoldenItem)
 		{
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			this.fedGoldenGyshal = true;
 			this.setInLove(player);
-		} else if(player.getHeldItem().getItem() == Additions.gysahlLoverlyItem)
+		}
+		else if (player.getHeldItem(hand).getItem() == Additions.gysahlLoverlyItem)
 		{
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			this.setInLove(player);
 		}
 
-		if (player.getHeldItem().getItem() == Additions.chocoboSaddleItem && !isSaddled())
+		if (player.getHeldItem(hand).getItem() == Additions.chocoboSaddleItem && !isSaddled())
 		{
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			// if the player is holding a saddle and the chocobo is not saddled, saddle the chocobo
-			player.addChatComponentMessage(new ChatComponentText("You put saddle on Chocobo"));//TODO lang
+			player.addChatComponentMessage(new TextComponentString("You put saddle on Chocobo"));// TODO lang
 			setSaddled(true);
 			return true;
 		}
 
-		if (player.getHeldItem().getItem() == Additions.chocoboSaddleBagItem && getBagType() == BagType.NONE && isSaddled())
+		if (player.getHeldItem(hand).getItem() == Additions.chocoboSaddleBagItem && getBagType() == BagType.NONE && isSaddled())
 		{// holding a saddle bag and no bag on chocobo, chocobo needs to be saddled
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setBag(BagType.SADDLE);
 			return true;
 		}
 
-		if (player.getHeldItem().getItem() == Additions.chocoboPackBagItem && getBagType() == BagType.NONE)
+		if (player.getHeldItem(hand).getItem() == Additions.chocoboPackBagItem && getBagType() == BagType.NONE)
 		{// holding a pack bag and no bag on chocobo, remove the saddle if the chocobo is saddled
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setBag(BagType.PACK);
 			return true;
 		}
 
-		if(getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem().getItem() == Additions.gysahlRedItem) {
+		if (getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem(hand).getItem() == Additions.gysahlRedItem)
+		{
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.RED);
 		}
-		if(getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem().getItem() == Additions.gysahlPinkItem) {
+		if (getChocoboColor() == ChocoboColor.GOLD && player.getHeldItem(hand).getItem() == Additions.gysahlPinkItem)
+		{
 			this.consumeItemFromStack(player, player.inventory.getCurrentItem());
 			setColor(ChocoboColor.PINK);
 		}
-		if(player.getHeldItem().getItem() == Additions.chocoboWhistleItem) {
+		if (player.getHeldItem(hand).getItem() == Additions.chocoboWhistleItem)
+		{
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			tagCompound.setString("LinkedChocoboUUID", this.getUniqueID().toString());
-			player.getHeldItem().setTagCompound(tagCompound);
-			player.getHeldItem().setStackDisplayName(this.getCommandSenderName()+"'s Whistle");
-			player.addChatComponentMessage(new ChatComponentText("You linked the whistle to "+this.getCommandSenderName()));
+			player.getHeldItem(hand).setTagCompound(tagCompound);
+			player.getHeldItem(hand).setStackDisplayName(this.getName() + "'s Whistle");
+			player.addChatComponentMessage(new TextComponentString("You linked the whistle to " + this.getName()));
 		}
 
 		return false;
@@ -630,10 +637,8 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 	@Override
 	public boolean canMateWith(EntityAnimal otherAnimal)
-	{//Check that its a chocobo and that its the right sex
-		return otherAnimal != this && (otherAnimal.getClass() == this.getClass() &&
-				this.isInLove() && otherAnimal.isInLove() && ((EntityChocobo)otherAnimal).isMale() != this.isMale()
-		);
+	{// Check that its a chocobo and that its the right sex
+		return otherAnimal != this && (otherAnimal.getClass() == this.getClass() && this.isInLove() && otherAnimal.isInLove() && ((EntityChocobo) otherAnimal).isMale() != this.isMale());
 	}
 
 	@Override
@@ -650,7 +655,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	@Override
 	protected boolean isMovementBlocked()
 	{
-		return getMovementType() == MovementType.STANDSTILL && riddenByEntity == null;
+		return getMovementType() == MovementType.STANDSTILL && this.getControllingPassenger() == null;
 	}
 
 	@Override
@@ -663,7 +668,6 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 	}
 
 	// Inv stuff
-
 	public void initChest()
 	{
 		AnimalChest animalChest = chocoboChest;
@@ -672,7 +676,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 
 		if (animalChest != null)
 		{
-			animalChest.func_110132_b(this);
+			animalChest.removeInventoryChangeListener(this);
 			int i = Math.min(animalChest.getSizeInventory(), this.chocoboChest.getSizeInventory());
 			for (int j = 0; j < i; ++j)
 			{
@@ -683,7 +687,7 @@ public class EntityChocobo extends EntityTameable implements IInvBasic
 				}
 			}
 		}
-		this.chocoboChest.func_110134_a(this);
+		this.chocoboChest.addInventoryChangeListener(this);
 	}
 
 	public int getChestSize()
