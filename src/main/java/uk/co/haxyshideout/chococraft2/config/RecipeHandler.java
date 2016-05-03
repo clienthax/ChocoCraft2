@@ -80,12 +80,9 @@ public class RecipeHandler {
 		);
 
 		//Straw
-		GameRegistry.addShapedRecipe(
+		GameRegistry.addShapelessRecipe(
 				new ItemStack(Additions.strawBlock, 4),
-				"ss ",
-				"   ",
-				"   ",
-				's', Items.wheat
+				new ItemStack(Items.wheat, 2)
 		);
 
 		//Alternative arrow recipe
