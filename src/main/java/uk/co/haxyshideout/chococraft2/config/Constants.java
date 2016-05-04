@@ -4,6 +4,8 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 /**
  * Created by clienthax on 12/4/2015.
@@ -19,4 +21,6 @@ public class Constants
 	public static final DataParameter<Byte> dataWatcherSaddled = EntityDataManager.<Byte> createKey(EntityAgeable.class, DataSerializers.BYTE);
 	public static final DataParameter<Byte> dataWatcherMale = EntityDataManager.<Byte> createKey(EntityAgeable.class, DataSerializers.BYTE);
 	public static final DataParameter<Byte> dataWatcherFollowingOwner = EntityDataManager.<Byte> createKey(EntityAgeable.class, DataSerializers.BYTE);
+
+	public static final SoundEvent babyChocoboSound = new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
 }

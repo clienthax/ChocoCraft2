@@ -129,20 +129,20 @@ public class EntityBabyChocobo extends EntityAnimal
 	@Override
 	protected SoundEvent getDeathSound()
 	{
-		return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
+		return Constants.babyChocoboSound;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound()
 	{
-		return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
+		return Constants.babyChocoboSound;
 	}
 
 	@Override
 	protected SoundEvent getAmbientSound()
 	{
 		if (rand.nextInt(4) == 0)
-			return new SoundEvent(new ResourceLocation("chococraft2:choco_kweh"));
+			return Constants.babyChocoboSound;
 
 		return null;
 	}
