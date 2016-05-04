@@ -1,11 +1,15 @@
 package uk.co.haxyshideout.chococraft2.network.side.server;
 
+import java.util.UUID;
+
 import com.mojang.authlib.GameProfile;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,21 +17,23 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import uk.co.haxyshideout.chococraft2.client.gui.ChocopediaGui;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
-import java.util.UUID;
-
 /**
  * Created by clienthax on 5/5/2015.
  */
-public class ChocopediaEditPacket implements IMessage {
+public class ChocopediaEditPacket implements IMessage
+{
 
 	UUID entityID;
 	String chocoboName;
 	EntityChocobo.MovementType movementType;
 	String ownerName;
 
-	public ChocopediaEditPacket() {}
+	public ChocopediaEditPacket()
+	{
+	}
 
-	public ChocopediaEditPacket(ChocopediaGui chocopediaGui) {
+	public ChocopediaEditPacket(ChocopediaGui chocopediaGui)
+	{
 		entityID = chocopediaGui.chocobo.getUniqueID();
 		chocoboName = chocopediaGui.name;
 		movementType = chocopediaGui.movementType;
@@ -35,7 +41,8 @@ public class ChocopediaEditPacket implements IMessage {
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		entityID = UUID.fromString(ByteBufUtils.readUTF8String(buf));
 		chocoboName = ByteBufUtils.readUTF8String(buf);
 		movementType = EntityChocobo.MovementType.values()[buf.readByte()];
@@ -43,29 +50,37 @@ public class ChocopediaEditPacket implements IMessage {
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		ByteBufUtils.writeUTF8String(buf, entityID.toString());
 		ByteBufUtils.writeUTF8String(buf, chocoboName);
 		buf.writeByte(movementType.ordinal());
 		ByteBufUtils.writeUTF8String(buf, ownerName);
 	}
 
-	public static class Handler implements IMessageHandler<ChocopediaEditPacket, IMessage> {
+	public static class Handler implements IMessageHandler<ChocopediaEditPacket, IMessage>
+	{
 
 		@Override
-		public IMessage onMessage(ChocopediaEditPacket message, MessageContext ctx) {
-			Entity entity = MinecraftServer.getServer().getEntityFromUuid(message.entityID);
-			if (entity != null && entity instanceof EntityChocobo) {
+		public IMessage onMessage(ChocopediaEditPacket message, MessageContext ctx)
+		{
+			Entity entity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(message.entityID);
+			if (entity != null && entity instanceof EntityChocobo)
+			{
 				EntityChocobo chocobo = (EntityChocobo) entity;
 				EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-				if (player == chocobo.getOwner()) {//Verify that the person who sent the packet is the owner of the chocobo
+				if (player == chocobo.getOwner())
+				{// Verify that the person who sent the packet is the owner of the chocobo
 					chocobo.setCustomNameTag(message.chocoboName);
 					chocobo.setMovementType(message.movementType);
-					GameProfile ownerProfile = MinecraftServer.getServer().getPlayerProfileCache().getGameProfileForUsername(message.ownerName);
-					if(ownerProfile != null) {
-						chocobo.setOwnerId(ownerProfile.getId().toString());
-					} else {
-						ctx.getServerHandler().playerEntity.addChatComponentMessage(new ChatComponentText("Unable to find owner by that name, not applying new owner!"));
+					GameProfile ownerProfile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getGameProfileForUsername(message.ownerName);
+					if (ownerProfile != null)
+					{
+						chocobo.setOwnerId(ownerProfile.getId());
+					}
+					else
+					{
+						ctx.getServerHandler().playerEntity.addChatComponentMessage(new TextComponentString("Unable to find owner by that name, not applying new owner!"));
 					}
 				}
 			}

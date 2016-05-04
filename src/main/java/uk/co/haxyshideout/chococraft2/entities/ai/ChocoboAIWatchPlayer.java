@@ -13,9 +13,9 @@ public class ChocoboAIWatchPlayer extends EntityAIBase
 	protected Entity closestEntity;
 	private float watchDistance;
 	private int lookTime;
-	private Class<?> watchedClass;
+	private Class<? extends Entity> watchedClass;
 
-	public ChocoboAIWatchPlayer(EntityLiving chocobo, Class<?> entityClass, float distance)
+	public ChocoboAIWatchPlayer(EntityLiving chocobo, Class<? extends Entity> entityClass, float distance)
 	{
 		this.theWatcher = chocobo;
 		this.watchedClass = entityClass;
@@ -60,7 +60,7 @@ public class ChocoboAIWatchPlayer extends EntityAIBase
 	@Override
 	public boolean continueExecuting()
 	{
-		return this.closestEntity.isEntityAlive() && theWatcher.riddenByEntity == null && (this.theWatcher.getDistanceSqToEntity(this.closestEntity) <= (double) (this.watchDistance * this.watchDistance) && this.lookTime > 0);
+		return this.closestEntity.isEntityAlive() && theWatcher.getControllingPassenger() == null && (this.theWatcher.getDistanceSqToEntity(this.closestEntity) <= (double) (this.watchDistance * this.watchDistance) && this.lookTime > 0);
 	}
 
 	/**

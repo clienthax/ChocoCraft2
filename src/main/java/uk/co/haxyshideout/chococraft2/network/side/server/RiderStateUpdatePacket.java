@@ -37,7 +37,7 @@ public class RiderStateUpdatePacket implements IMessage {
 	public static class Handler implements IMessageHandler<RiderStateUpdatePacket, IMessage> {
 		@Override
 		public IMessage onMessage(RiderStateUpdatePacket message, MessageContext ctx) {
-			Entity entity = ctx.getServerHandler().playerEntity.ridingEntity;
+			Entity entity = ctx.getServerHandler().playerEntity.getRidingEntity();
 			if(!(entity instanceof EntityChocobo))
 				return null;
 

@@ -1,20 +1,19 @@
 package uk.co.haxyshideout.haxylib.utils;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProviderHell;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldProviderHell;
+
 /**
  * Created by clienthax on 20/5/2015.
  */
-@SuppressWarnings("WhileLoopReplaceableByForEach")
 public class WorldHelper {
 
 	public static boolean isHellWorld(World world) {
@@ -22,7 +21,7 @@ public class WorldHelper {
 	}
 
 	public static boolean isBlockAtPositionLiquid(World world, BlockPos pos) {
-		return world.getBlockState(pos).getBlock().getMaterial().isLiquid();
+		return world.getBlockState(pos).getBlock().getMaterial(world.getBlockState(pos)).isLiquid();
 	}
 
 	public static boolean isNormalCubesAround(World world, BlockPos pos) {
@@ -34,13 +33,13 @@ public class WorldHelper {
 	}
 
 	private static boolean isNormalBlockAtPos(World world, BlockPos pos) {
-		return world.getBlockState(pos).getBlock().isNormalCube();
+		return world.getBlockState(pos).getBlock().isNormalCube(world.getBlockState(pos));
 	}
 
 	public static BlockPos getFirstSolidWithAirAbove(World world, BlockPos pos) {//TODO more efficient way of doing this
 		for(int y = pos.getY(); y < world.getHeight(); y++) {
 			pos = new BlockPos(pos.getX(), y, pos.getZ());
-			if(world.getBlockState(pos).getBlock().isNormalCube() && world.isAirBlock(pos.up()))
+			if(world.getBlockState(pos).getBlock().isNormalCube(world.getBlockState(pos)) && world.isAirBlock(pos.up()))
 				return pos;
 		}
 		return null;

@@ -137,7 +137,7 @@ public class ChocoboAIMate extends EntityAIBase
 
 			if (entityplayer != null)
 			{
-				entityplayer.triggerAchievement(StatList.animalsBredStat);
+				entityplayer.addStat(StatList.animalsBred);
 			}
 
 			this.theAnimal.setGrowingAge(6000);
@@ -157,7 +157,7 @@ public class ChocoboAIMate extends EntityAIBase
 				this.theWorld.spawnParticle(EnumParticleTypes.HEART, this.theAnimal.posX + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, this.theAnimal.posY + 0.5D + (double)(random.nextFloat() * this.theAnimal.height), this.theAnimal.posZ + (double)(random.nextFloat() * this.theAnimal.width * 2.0F) - (double)this.theAnimal.width, d0, d1, d2);
 			}
 
-			if (this.theWorld.getGameRules().getGameRuleBooleanValue("doMobLoot"))
+			if (this.theWorld.getGameRules().getBoolean("doMobLoot"))
 			{
 				this.theWorld.spawnEntityInWorld(new EntityXPOrb(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, random.nextInt(7) + 1));
 			}

@@ -5,8 +5,9 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import uk.co.haxyshideout.chococraft2.entities.EntityChocobo;
 
@@ -81,7 +82,7 @@ public class ChocoboAIFollowLure extends EntityAIBase
 	public void startExecuting()
 	{
 		this.field_75343_h = 0;
-		((PathNavigateGround)this.chocobo.getNavigator()).setAvoidsWater(false);
+		((PathNavigateGround)this.chocobo.getNavigator()).setCanSwim(true);
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class ChocoboAIFollowLure extends EntityAIBase
 	{
 		this.theOwner = null;
 		this.petPathfinder.clearPathEntity();
-		((PathNavigateGround)this.chocobo.getNavigator()).setAvoidsWater(true);
+		((PathNavigateGround)this.chocobo.getNavigator()).setCanSwim(false);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class ChocoboAIFollowLure extends EntityAIBase
 							{
 								for (int i1 = 0; i1 <= 4; ++i1)
 								{
-									if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && World.doesBlockHaveSolidTopSurface(this.theWorld, new BlockPos(i + l, k - 1, j + i1)) && !this.theWorld.getBlockState(new BlockPos(i + l, k, j + i1)).getBlock().isFullCube() && !this.theWorld.getBlockState(new BlockPos(i + l, k + 1, j + i1)).getBlock().isFullCube())
+									if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.theWorld.isSideSolid(new BlockPos(i + l, k - 1, j + i1), EnumFacing.UP) && !this.theWorld.getBlockState(new BlockPos(i + l, k, j + i1)).getBlock().isFullCube(this.theWorld.getBlockState(new BlockPos(i + l, k, j + i1))) && !this.theWorld.getBlockState(new BlockPos(i + l, k + 1, j + i1)).getBlock().isFullCube(this.theWorld.getBlockState(new BlockPos(i + l, k + 1, j + i1))))
 									{
 										this.chocobo.setLocationAndAngles((double)((float)(i + l) + 0.5F), (double)k, (double)((float)(j + i1) + 0.5F), this.chocobo.rotationYaw, this.chocobo.rotationPitch);
 										this.petPathfinder.clearPathEntity();

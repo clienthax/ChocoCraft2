@@ -1,8 +1,10 @@
 package uk.co.haxyshideout.chococraft2.entities.ai;
 
+import java.util.List;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import net.minecraft.command.IEntitySelector;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -11,12 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import uk.co.haxyshideout.haxylib.items.GenericArmor;
 import uk.co.haxyshideout.haxylib.utils.RandomHelper;
-
-import java.util.List;
 
 /**
  * Created by clienthax on 20/5/2015.
@@ -94,7 +95,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 		if(theEntity.worldObj.getWorldTime() % 10 != 0)
 			return false;
 
-		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector));
+		List list = this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(EntitySelectors.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector));
 
 		if (list.isEmpty())
 		{
@@ -103,7 +104,7 @@ public class ChocoboAIAvoidPlayer extends EntityAIBase {
 		else
 		{
 			this.closestLivingEntity = (Entity)list.get(0);
-			Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, new Vec3(this.closestLivingEntity.posX, this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
+			Vec3d vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.posX, this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
 
 			if (vec3 == null)
 			{
